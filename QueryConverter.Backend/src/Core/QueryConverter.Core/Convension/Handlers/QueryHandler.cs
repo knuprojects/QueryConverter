@@ -117,7 +117,6 @@ namespace QueryConverter.Core.Convension.Handlers
                 {conditionsStatement}
             }}".PrettyJson();
 
-            // set module level variable
             ElasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
         }
 
@@ -127,15 +126,12 @@ namespace QueryConverter.Core.Convension.Handlers
             var conditions = statement.Where.Conditions();
             var fields = statement.Select.Fields();
 
-            // get table statement
             string tableStatement = $"POST {table}/_search";
 
-            // get the field statement
             string fieldStatement = string.Empty;
 
             if (fields.Count > 0 && fields[0].Column != "*")
             {
-                // add quotes around each field, plus a starting minus
                 fieldStatement = string.Join(", ", fields.Select(x => "\"" + x.Column + "\""));
                 fieldStatement = ", \"_source\": [" + fieldStatement + "]";
             }
@@ -148,10 +144,8 @@ namespace QueryConverter.Core.Convension.Handlers
                 {fieldStatement}
             }}";
 
-            // format JSON
             jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
 
-            // set module level variable
             ElasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
         }
     }
