@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using QueryConverter.Core.Helpers;
+using QueryConverter.Core.Enums;
+using QueryConverter.Core.Helpers.Extensions;
 using TSQL;
 using TSQL.Statements;
 
@@ -8,7 +9,6 @@ namespace QueryConverter.Core.Convension
 {
     public class SqlToElasticSearchConversion
     {
-
         public SqlToElasticSearchConversion(string sqlQuery)
         {
             ProcessSqlQuery(sqlQuery);
@@ -125,20 +125,20 @@ namespace QueryConverter.Core.Convension
 
                 switch (condition.Operator)
                 {
-                    case WhereCondition.OperatorType.Equal:
+                    case OperatorType.Equal:
 
                         switch (condition.Type)
                         {
 
-                            case WhereCondition.LiteralType.Numeric:
-                            case WhereCondition.LiteralType.String:
+                            case LiteralType.Numeric:
+                            case LiteralType.String:
                                 conditionText = Templates.SingleCondition
                                                     .Replace("(column)", condition.Column)
                                                     .Replace("(value)", condition.SingularValue);
                                 break;
                         }
                         break;
-                    case WhereCondition.OperatorType.In:
+                    case OperatorType.In:
 
                         // add switch for condition types later
                         conditionText = Templates.InCondition
@@ -147,7 +147,7 @@ namespace QueryConverter.Core.Convension
 
                         break;
 
-                    case WhereCondition.OperatorType.Between:
+                    case OperatorType.Between:
 
                         // add switch for condition types later
                         conditionText = Templates.BetweenCondition
@@ -156,10 +156,10 @@ namespace QueryConverter.Core.Convension
                                                     .Replace("(upperValue)", condition.BetweenValues.Last());
                         break;
 
-                    case WhereCondition.OperatorType.GreaterThan:
-                    case WhereCondition.OperatorType.GreaterThanOrEquals:
-                    case WhereCondition.OperatorType.LessThan:
-                    case WhereCondition.OperatorType.LessThanOrEquals:
+                    case OperatorType.GreaterThan:
+                    case OperatorType.GreaterThanOrEquals:
+                    case OperatorType.LessThan:
+                    case OperatorType.LessThanOrEquals:
                         // add switch for condition types later
                         conditionText = Templates.ComparisonCondition
                                                     .Replace("(column)", condition.Column)
@@ -167,14 +167,14 @@ namespace QueryConverter.Core.Convension
                                                     .Replace("(value)", condition.SingularValue);
                         break;
 
-                    case WhereCondition.OperatorType.Like:
+                    case OperatorType.Like:
                         conditionText = Templates.LikeCondition
                                                     .Replace("(column)", condition.Column)
                                                     .Replace("(value)", condition.SingularValue.Replace("%", "*").ToLower());
 
                         break;
 
-                    case WhereCondition.OperatorType.Unknown:
+                    case OperatorType.Unknown:
                         break;
                 }
 

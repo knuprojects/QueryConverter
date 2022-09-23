@@ -1,30 +1,12 @@
-﻿namespace QueryConverter.Core.Convension
+﻿using QueryConverter.Core.Enums;
+
+namespace QueryConverter.Core.Convension
 {
     public class WhereCondition
     {
         private List<string> inValues = new List<string>();
         private List<string> betweenValues = new List<string>();
         private string singularValue = string.Empty;
-
-        public enum LiteralType
-        {
-            Numeric,
-            String,
-            Boolean
-        }
-
-        public enum OperatorType
-        {
-            Equal,
-            GreaterThan,
-            GreaterThanOrEquals,
-            LessThan,
-            LessThanOrEquals,
-            In,
-            Between,
-            Unknown,
-            Like
-        }
 
         public string Column { get; set; } = null;
         public LiteralType Type { get; set; }
@@ -90,11 +72,9 @@
             }
         }
 
-
-        // helper methods
-        public static OperatorType ToOperatorType(string op)
+        public static OperatorType ToOperatorType(string operatorType)
         {
-            switch (op.ToLower())
+            switch (operatorType.ToLower())
             {
                 case "=":
                     return OperatorType.Equal;
@@ -117,9 +97,9 @@
             }
         }
 
-        public static string FromOperatorType(OperatorType opType)
+        public static string FromOperatorType(OperatorType operatorType)
         {
-            switch (opType)
+            switch (operatorType)
             {
                 case OperatorType.Equal:
                     return "=";
@@ -135,7 +115,7 @@
                 case OperatorType.In:
                 case OperatorType.Between:
                 default:
-                    return opType.ToString();
+                    return operatorType.ToString();
             }
 
         }

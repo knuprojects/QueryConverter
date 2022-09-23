@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using QueryConverter.Core.Enums;
+using QueryConverter.Core.Helpers.Attributes;
+using QueryConverter.Core.Helpers.Extensions;
+using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -8,182 +11,6 @@ namespace QueryConverter.Core.Helpers
 {
     public class CommandLineArguments
     {
-        [Flags]
-        public enum ArgumentType
-        {
-            /// <summary>
-            /// Indicates that this field is required. An error will be displayed
-            /// if it is not present when parsing arguments.
-            /// </summary>
-            Required = 0x01,
-            /// <summary>
-            /// Only valid in conjunction with Multiple.
-            /// Duplicate values will result in an error.
-            /// </summary>
-            Unique = 0x02,
-            /// <summary>
-            /// Inidicates that the argument may be specified more than once.
-            /// Only valid if the argument is a collection
-            /// </summary>
-            Multiple = 0x04,
-
-            /// <summary>
-            /// The default type for non-collection arguments.
-            /// The argument is not required, but an error will be reported if it is specified more than once.
-            /// </summary>
-            AtMostOnce = 0x00,
-
-            /// <summary>
-            /// For non-collection arguments, when the argument is specified more than
-            /// once no error is reported and the value of the argument is the last
-            /// value which occurs in the argument list.
-            /// </summary>
-            LastOccurenceWins = Multiple,
-
-            /// <summary>
-            /// The default type for collection arguments.
-            /// The argument is permitted to occur multiple times, but duplicate 
-            /// values will cause an error to be reported.
-            /// </summary>
-            MultipleUnique = Multiple | Unique,
-        }
-
-        /// <summary>
-        /// Allows control of command line parsing.
-        /// Attach this attribute to instance fields of types used
-        /// as the destination of command line argument parsing.
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Field)]
-        public class ArgumentAttribute : Attribute
-        {
-            /// <summary>
-            /// Allows control of command line parsing.
-            /// </summary>
-            /// <param name="type"> Specifies the error checking to be done on the argument. </param>
-            public ArgumentAttribute(ArgumentType type)
-            {
-                this.type = type;
-            }
-
-            /// <summary>
-            /// The error checking to be done on the argument.
-            /// </summary>
-            public ArgumentType Type
-            {
-                get { return this.type; }
-            }
-            /// <summary>
-            /// Returns true if the argument did not have an explicit short name specified.
-            /// </summary>
-            public bool DefaultShortName { get { return null == this.shortName; } }
-
-            /// <summary>
-            /// The short name of the argument.
-            /// Set to null means use the default short name if it does not
-            /// conflict with any other parameter name.
-            /// Set to String.Empty for no short name.
-            /// This property should not be set for DefaultArgumentAttributes.
-            /// </summary>
-            public string ShortName
-            {
-                get { return this.shortName; }
-                set { Debug.Assert(value == null || !(this is DefaultArgumentAttribute)); this.shortName = value; }
-            }
-
-            /// <summary>
-            /// Returns true if the argument did not have an explicit long name specified.
-            /// </summary>
-            public bool DefaultLongName { get { return null == this.longName; } }
-
-            /// <summary>
-            /// The long name of the argument.
-            /// Set to null means use the default long name.
-            /// The long name for every argument must be unique.
-            /// It is an error to specify a long name of String.Empty.
-            /// </summary>
-            public string LongName
-            {
-                get { Debug.Assert(!this.DefaultLongName); return this.longName; }
-                set { Debug.Assert(value != ""); this.longName = value; }
-            }
-
-            /// <summary>
-            /// The default value of the argument.
-            /// </summary>
-            public object DefaultValue
-            {
-                get { return this.defaultValue; }
-                set { this.defaultValue = value; }
-            }
-
-            /// <summary>
-            /// Returns true if the argument has a default value.
-            /// </summary>
-            public bool HasDefaultValue { get { return null != this.defaultValue; } }
-
-            /// <summary>
-            /// Returns true if the argument has help text specified.
-            /// </summary>
-            public bool HasHelpText { get { return null != this.helpText; } }
-
-            /// <summary>
-            /// The help text for the argument.
-            /// </summary>
-            public string HelpText
-            {
-                get { return this.helpText; }
-                set { this.helpText = value; }
-            }
-
-            private string shortName;
-            private string longName;
-            private string helpText;
-            private object defaultValue;
-            private ArgumentType type;
-        }
-
-        /// <summary>
-        /// Indicates that this argument is the default argument.
-        /// '/' or '-' prefix only the argument value is specified.
-        /// The ShortName property should not be set for DefaultArgumentAttribute
-        /// instances. The LongName property is used for usage text only and
-        /// does not affect the usage of the argument.
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Field)]
-        public class DefaultArgumentAttribute : ArgumentAttribute
-        {
-            /// <summary>
-            /// Indicates that this argument is the default argument.
-            /// </summary>
-            /// <param name="type"> Specifies the error checking to be done on the argument. </param>
-            public DefaultArgumentAttribute(ArgumentType type)
-                : base(type)
-            {
-            }
-        }
-
-        /// <summary>
-        /// Indicates that a type represents command line arguments.
-        /// adding this attribute is optional, and can be sued to override
-        /// default behavior for case sensitivity.
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-        public class CommandLineArgumentsAttribute : Attribute
-        {
-            public CommandLineArgumentsAttribute() { }
-
-            /// <summary>
-            /// Should argument name parsing respect case
-            /// </summary>
-            public bool CaseSensitive
-            {
-                get { return this.caseSensitive; }
-                set { this.caseSensitive = value; }
-            }
-
-            private bool caseSensitive = true;
-        }
-
         /// <summary>
         /// A delegate used in error reporting.
         /// </summary>
@@ -370,42 +197,6 @@ namespace QueryConverter.Core.Helpers
                 return screenWidth;
             }
 
-            /// <summary>
-            /// Searches a StringBuilder for a character
-            /// </summary>
-            /// <param name="text"> The text to search. </param>
-            /// <param name="value"> The character value to search for. </param>
-            /// <param name="startIndex"> The index to stat searching at. </param>
-            /// <returns> The index of the first occurence of value or -1 if it is not found. </returns>
-            public static int IndexOf(StringBuilder text, char value, int startIndex)
-            {
-                for (int index = startIndex; index < text.Length; index++)
-                {
-                    if (text[index] == value)
-                        return index;
-                }
-
-                return -1;
-            }
-
-            /// <summary>
-            /// Searches a StringBuilder for a character in reverse
-            /// </summary>
-            /// <param name="text"> The text to search. </param>
-            /// <param name="value"> The character to search for. </param>
-            /// <param name="startIndex"> The index to start the search at. </param>
-            /// <returns>The index of the last occurence of value in text or -1 if it is not found. </returns>
-            public static int LastIndexOf(StringBuilder text, char value, int startIndex)
-            {
-                for (int index = Math.Min(startIndex, text.Length - 1); index >= 0; index--)
-                {
-                    if (text[index] == value)
-                        return index;
-                }
-
-                return -1;
-            }
-
             private const int spaceBeforeParam = 2;
 
             /// <summary>
@@ -417,7 +208,7 @@ namespace QueryConverter.Core.Helpers
             {
                 this.reporter = reporter;
                 this.arguments = new ArrayList();
-                CommandLineArgumentsAttribute typeAttribute = GetAttribute(argumentSpecification);
+                CommandLineArgumentsAttribute typeAttribute = ExtensionMethods.GetAttribute(argumentSpecification);
                 bool caseSensitive = (typeAttribute == null || typeAttribute.CaseSensitive);
                 this.argumentMap = new Hashtable(caseSensitive ? StringComparer.Ordinal : StringComparer.InvariantCultureIgnoreCase);
 
@@ -425,7 +216,7 @@ namespace QueryConverter.Core.Helpers
                 {
                     if (!field.IsStatic && !field.IsInitOnly && !field.IsLiteral)
                     {
-                        ArgumentAttribute attribute = GetAttribute(field);
+                        ArgumentAttribute attribute = ExtensionMethods.GetAttribute(field);
                         if (attribute is DefaultArgumentAttribute)
                         {
                             Debug.Assert(this.defaultArgument == null);
@@ -440,26 +231,6 @@ namespace QueryConverter.Core.Helpers
 
                 AddExplicitArgumentNames();
                 AddImplicitArgumentNames();
-            }
-
-            private static ArgumentAttribute GetAttribute(FieldInfo field)
-            {
-                return (ArgumentAttribute)GetAttribute(field, typeof(ArgumentAttribute));
-            }
-
-            private static CommandLineArgumentsAttribute GetAttribute(Type type)
-            {
-                return (CommandLineArgumentsAttribute)GetAttribute(type, typeof(CommandLineArgumentsAttribute));
-            }
-
-            private static object GetAttribute(MemberInfo member, Type attributeType)
-            {
-                object[] attributes = member.GetCustomAttributes(attributeType, false);
-                if (attributes.Length == 1)
-                    return attributes[0];
-
-                Debug.Assert(attributes.Length == 0);
-                return null;
             }
 
             private void AddExplicitArgumentNames()
@@ -699,7 +470,7 @@ namespace QueryConverter.Core.Helpers
                         index = endIndex;
 
                         // do new line
-                        AddNewLine(newLine, builder, ref currentColumn);
+                        ExtensionMethods.AddNewLine(newLine, builder, ref currentColumn);
 
                         // don't start a new line with spaces
                         while (index < helpStrings.help.Length && helpStrings.help[index] == ' ')
@@ -715,11 +486,7 @@ namespace QueryConverter.Core.Helpers
 
                 return builder.ToString();
             }
-            private static void AddNewLine(string newLine, StringBuilder builder, ref int currentColumn)
-            {
-                builder.Append(newLine);
-                currentColumn = 0;
-            }
+
             private ArgumentHelpStrings[] GetAllHelpStrings()
             {
                 ArgumentHelpStrings[] strings = new ArgumentHelpStrings[NumberOfParametersToDisplay()];
@@ -875,89 +642,20 @@ namespace QueryConverter.Core.Helpers
                 return hadError;
             }
 
-            private static string LongName(ArgumentAttribute attribute, FieldInfo field)
-            {
-                return (attribute == null || attribute.DefaultLongName) ? field.Name : attribute.LongName;
-            }
-
-            private static string ShortName(ArgumentAttribute attribute, FieldInfo field)
-            {
-                if (attribute is DefaultArgumentAttribute)
-                    return null;
-                if (!ExplicitShortName(attribute))
-                    return LongName(attribute, field).Substring(0, 1);
-                return attribute.ShortName;
-            }
-
-            private static string HelpText(ArgumentAttribute attribute, FieldInfo field)
-            {
-                if (attribute == null)
-                    return null;
-                else
-                    return attribute.HelpText;
-            }
-
-            private static bool HasHelpText(ArgumentAttribute attribute)
-            {
-                return (attribute != null && attribute.HasHelpText);
-            }
-
-            private static bool ExplicitShortName(ArgumentAttribute attribute)
-            {
-                return (attribute != null && !attribute.DefaultShortName);
-            }
-
-            private static object DefaultValue(ArgumentAttribute attribute, FieldInfo field)
-            {
-                return (attribute == null || !attribute.HasDefaultValue) ? null : attribute.DefaultValue;
-            }
-
-            private static Type ElementType(FieldInfo field)
-            {
-                if (IsCollectionType(field.FieldType))
-                    return field.FieldType.GetElementType();
-                else
-                    return null;
-            }
-
-            private static ArgumentType Flags(ArgumentAttribute attribute, FieldInfo field)
-            {
-                if (attribute != null)
-                    return attribute.Type;
-                else if (IsCollectionType(field.FieldType))
-                    return ArgumentType.MultipleUnique;
-                else
-                    return ArgumentType.AtMostOnce;
-            }
-
-            private static bool IsCollectionType(Type type)
-            {
-                return type.IsArray;
-            }
-
-            private static bool IsValidElementType(Type type)
-            {
-                return type != null && (
-                    type == typeof(int) ||
-                    type == typeof(uint) ||
-                    type == typeof(string) ||
-                    type == typeof(bool) ||
-                    type.IsEnum);
-            }
 
             [System.Diagnostics.DebuggerDisplay("Name = {LongName}")]
             private class Argument
             {
                 public Argument(ArgumentAttribute attribute, FieldInfo field, ErrorReporter reporter)
                 {
-                    this.longName = Parser.LongName(attribute, field);
-                    this.explicitShortName = Parser.ExplicitShortName(attribute);
-                    this.shortName = Parser.ShortName(attribute, field);
-                    this.hasHelpText = Parser.HasHelpText(attribute);
-                    this.helpText = Parser.HelpText(attribute, field);
-                    this.defaultValue = Parser.DefaultValue(attribute, field);
-                    this.elementType = ElementType(field);
-                    this.flags = Flags(attribute, field);
+                    this.longName = ExtensionMethods.LongName(attribute, field);
+                    this.explicitShortName = ExtensionMethods.ExplicitShortName(attribute);
+                    this.shortName = ExtensionMethods.ShortName(attribute, field);
+                    this.hasHelpText = ExtensionMethods.HasHelpText(attribute);
+                    this.helpText = ExtensionMethods.HelpText(attribute, field);
+                    this.defaultValue = ExtensionMethods.DefaultValue(attribute, field);
+                    this.elementType = ExtensionMethods.ElementType(field);
+                    this.flags = ExtensionMethods.Flags(attribute, field);
                     this.field = field;
                     this.seenValue = false;
                     this.reporter = reporter;
@@ -972,9 +670,9 @@ namespace QueryConverter.Core.Helpers
                     Debug.Assert(!this.isDefault || !this.ExplicitShortName);
                     Debug.Assert(!IsCollection || AllowMultiple, "Collection arguments must have allow multiple");
                     Debug.Assert(!Unique || IsCollection, "Unique only applicable to collection arguments");
-                    Debug.Assert(IsValidElementType(Type) ||
-                        IsCollectionType(Type));
-                    Debug.Assert((IsCollection && IsValidElementType(elementType)) ||
+                    Debug.Assert(ExtensionMethods.IsValidElementType(Type) ||
+                        ExtensionMethods.IsCollectionType(Type));
+                    Debug.Assert((IsCollection && ExtensionMethods.IsValidElementType(elementType)) ||
                         (!IsCollection && elementType == null));
                     Debug.Assert(!(this.IsRequired && this.HasDefaultValue), "Required arguments cannot have default value");
                     Debug.Assert(!this.HasDefaultValue || (this.defaultValue.GetType() == field.FieldType), "Type of default value must match field type");
@@ -1321,7 +1019,7 @@ namespace QueryConverter.Core.Helpers
 
                 public bool IsCollection
                 {
-                    get { return IsCollectionType(Type); }
+                    get { return ExtensionMethods.IsCollectionType(Type); }
                 }
 
                 public bool IsDefault

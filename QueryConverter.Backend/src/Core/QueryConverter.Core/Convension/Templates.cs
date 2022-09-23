@@ -1,6 +1,6 @@
 ﻿namespace QueryConverter.Core.Convension
 {
-    public class Templates
+    public static class Templates
     {
         public const string SingleCondition = @"
                 {
