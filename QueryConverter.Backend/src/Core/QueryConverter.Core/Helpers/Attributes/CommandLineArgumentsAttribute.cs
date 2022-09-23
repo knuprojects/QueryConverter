@@ -8,6 +8,8 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public class CommandLineArgumentsAttribute : Attribute
     {
+        private bool _caseSensitive = true;
+
         public CommandLineArgumentsAttribute() { }
 
         /// <summary>
@@ -15,10 +17,8 @@
         /// </summary>
         public bool CaseSensitive
         {
-            get { return this.caseSensitive; }
-            set { this.caseSensitive = value; }
+            get { return _caseSensitive; }
+            set { _caseSensitive = value; }
         }
-
-        private bool caseSensitive = true;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using QueryConverter.Core.Enums;
 using QueryConverter.Core.Helpers.Attributes;
+using QueryConverter.Core.Helpers.Generics;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -9,6 +10,9 @@ namespace QueryConverter.Core.Helpers.Extensions;
 
 public static class ExtensionMethods
 {
+    public static readonly IHelper<ArgumentAttribute> _argumentHelper;
+    public static readonly IHelper<CommandLineArgumentsAttribute> _commandLineArgumentsHelper;
+
     public static string PrettyJson(this string jsonString)
     {
         dynamic parsedJson = JsonConvert.DeserializeObject(jsonString);
@@ -39,22 +43,12 @@ public static class ExtensionMethods
 
     public static ArgumentAttribute GetAttribute(FieldInfo field)
     {
-        return (ArgumentAttribute)GetAttribute(field, typeof(ArgumentAttribute));
+        return _argumentHelper.GetAttribute(field, typeof(ArgumentAttribute));
     }
 
     public static CommandLineArgumentsAttribute GetAttribute(Type type)
     {
-        return (CommandLineArgumentsAttribute)GetAttribute(type, typeof(CommandLineArgumentsAttribute));
-    }
-
-    public static object GetAttribute(MemberInfo member, Type attributeType)
-    {
-        object[] attributes = member.GetCustomAttributes(attributeType, false);
-        if (attributes.Length == 1)
-            return attributes[0];
-
-        Debug.Assert(attributes.Length == 0);
-        return null;
+        return _commandLineArgumentsHelper.GetAttribute(type, typeof(CommandLineArgumentsAttribute));
     }
 
     public static void AddNewLine(string newLine, StringBuilder builder, ref int currentColumn)

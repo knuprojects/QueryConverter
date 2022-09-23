@@ -1,4 +1,4 @@
-﻿namespace QueryConverter.Core.Convension
+﻿namespace QueryConverter.Core.Consts
 {
     public static class Templates
     {

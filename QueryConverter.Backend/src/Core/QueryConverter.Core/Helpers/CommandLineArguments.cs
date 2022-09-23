@@ -648,18 +648,18 @@ namespace QueryConverter.Core.Helpers
             {
                 public Argument(ArgumentAttribute attribute, FieldInfo field, ErrorReporter reporter)
                 {
-                    this.longName = ExtensionMethods.LongName(attribute, field);
-                    this.explicitShortName = ExtensionMethods.ExplicitShortName(attribute);
-                    this.shortName = ExtensionMethods.ShortName(attribute, field);
-                    this.hasHelpText = ExtensionMethods.HasHelpText(attribute);
-                    this.helpText = ExtensionMethods.HelpText(attribute, field);
-                    this.defaultValue = ExtensionMethods.DefaultValue(attribute, field);
-                    this.elementType = ExtensionMethods.ElementType(field);
-                    this.flags = ExtensionMethods.Flags(attribute, field);
-                    this.field = field;
-                    this.seenValue = false;
-                    this.reporter = reporter;
-                    this.isDefault = attribute != null && attribute is DefaultArgumentAttribute;
+                    longName = ExtensionMethods.LongName(attribute, field);
+                    explicitShortName = ExtensionMethods.ExplicitShortName(attribute);
+                    shortName = ExtensionMethods.ShortName(attribute, field);
+                    hasHelpText = ExtensionMethods.HasHelpText(attribute);
+                    helpText = ExtensionMethods.HelpText(attribute, field);
+                    defaultValue = ExtensionMethods.DefaultValue(attribute, field);
+                    elementType = ExtensionMethods.ElementType(field);
+                    flags = ExtensionMethods.Flags(attribute, field);
+                    field = field;
+                    seenValue = false;
+                    reporter = reporter;
+                    isDefault = attribute != null && attribute is DefaultArgumentAttribute;
 
                     if (IsCollection)
                     {

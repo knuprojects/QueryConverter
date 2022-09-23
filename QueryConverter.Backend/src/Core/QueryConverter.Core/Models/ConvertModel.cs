@@ -2,7 +2,7 @@
 {
     public class ConvertModel
     {
-        public string SQLQuery { get; set; }
-        public string ElasticQuery { get; set; }
+        public string SQLQuery { get; set; } = null!;
+        public string ElasticQuery { get; set; } = null!;
     }
 }

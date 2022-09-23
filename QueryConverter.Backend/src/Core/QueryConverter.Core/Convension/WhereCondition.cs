@@ -4,11 +4,13 @@ namespace QueryConverter.Core.Convension
 {
     public class WhereCondition
     {
-        private List<string> inValues = new List<string>();
-        private List<string> betweenValues = new List<string>();
-        private string singularValue = string.Empty;
+        private List<string> _inValues = new ();
 
-        public string Column { get; set; } = null;
+        private List<string> _betweenValues = new ();
+
+        private string _singularValue = string.Empty;
+
+        public string Column { get; set; } = String.Empty;
         public LiteralType Type { get; set; }
         public OperatorType Operator { get; set; }
 
@@ -25,16 +27,16 @@ namespace QueryConverter.Core.Convension
                     case OperatorType.GreaterThanOrEquals:
                     case OperatorType.LessThan:
                     case OperatorType.LessThanOrEquals:
-                        singularValue = trimmedValue;
+                        _singularValue = trimmedValue;
                         break;
                     case OperatorType.In:
-                        inValues.Add(trimmedValue);
+                        _inValues.Add(trimmedValue);
                         break;
                     case OperatorType.Between:
-                        betweenValues.Add(trimmedValue);
+                        _betweenValues.Add(trimmedValue);
                         break;
                     case OperatorType.Like:
-                        singularValue = trimmedValue;
+                        _singularValue = trimmedValue;
                         break;
                 }
             }
@@ -44,7 +46,7 @@ namespace QueryConverter.Core.Convension
         {
             get
             {
-                return inValues;
+                return _inValues;
             }
         }
 
@@ -52,7 +54,7 @@ namespace QueryConverter.Core.Convension
         {
             get
             {
-                return betweenValues;
+                return _betweenValues;
             }
         }
 
@@ -60,7 +62,7 @@ namespace QueryConverter.Core.Convension
         {
             get
             {
-                return singularValue;
+                return _singularValue;
             }
         }
 

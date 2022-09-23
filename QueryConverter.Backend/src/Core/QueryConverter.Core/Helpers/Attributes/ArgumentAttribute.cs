@@ -6,13 +6,19 @@ namespace QueryConverter.Core.Helpers.Attributes
     [AttributeUsage(AttributeTargets.Field)]
     public class ArgumentAttribute : Attribute
     {
+        private string _shortName;
+        private string _longName;
+        private string _helpText;
+        private object _defaultValue;
+        private ArgumentType _type;
+
         /// <summary>
         /// Allows control of command line parsing.
         /// </summary>
         /// <param name="type"> Specifies the error checking to be done on the argument. </param>
         public ArgumentAttribute(ArgumentType type)
         {
-            this.type = type;
+            _type = type;
         }
 
         /// <summary>
@@ -20,12 +26,13 @@ namespace QueryConverter.Core.Helpers.Attributes
         /// </summary>
         public ArgumentType Type
         {
-            get { return this.type; }
+            get { return _type; }
         }
+
         /// <summary>
         /// Returns true if the argument did not have an explicit short name specified.
         /// </summary>
-        public bool DefaultShortName { get { return null == this.shortName; } }
+        public bool DefaultShortName { get { return null == _shortName; } }
 
         /// <summary>
         /// The short name of the argument.
@@ -36,14 +43,14 @@ namespace QueryConverter.Core.Helpers.Attributes
         /// </summary>
         public string ShortName
         {
-            get { return this.shortName; }
-            set { Debug.Assert(value == null || !(this is DefaultArgumentAttribute)); this.shortName = value; }
+            get { return _shortName; }
+            set { Debug.Assert(value == null || !(this is DefaultArgumentAttribute)); _shortName = value; }
         }
 
         /// <summary>
         /// Returns true if the argument did not have an explicit long name specified.
         /// </summary>
-        public bool DefaultLongName { get { return null == this.longName; } }
+        public bool DefaultLongName { get { return null == _longName; } }
 
         /// <summary>
         /// The long name of the argument.
@@ -53,8 +60,8 @@ namespace QueryConverter.Core.Helpers.Attributes
         /// </summary>
         public string LongName
         {
-            get { Debug.Assert(!this.DefaultLongName); return this.longName; }
-            set { Debug.Assert(value != ""); this.longName = value; }
+            get { Debug.Assert(!this.DefaultLongName); return _longName; }
+            set { Debug.Assert(value != ""); _longName = value; }
         }
 
         /// <summary>
@@ -62,33 +69,27 @@ namespace QueryConverter.Core.Helpers.Attributes
         /// </summary>
         public object DefaultValue
         {
-            get { return this.defaultValue; }
-            set { this.defaultValue = value; }
+            get { return _defaultValue; }
+            set { _defaultValue = value; }
         }
 
         /// <summary>
         /// Returns true if the argument has a default value.
         /// </summary>
-        public bool HasDefaultValue { get { return null != this.defaultValue; } }
+        public bool HasDefaultValue { get { return null != _defaultValue; } }
 
         /// <summary>
         /// Returns true if the argument has help text specified.
         /// </summary>
-        public bool HasHelpText { get { return null != this.helpText; } }
+        public bool HasHelpText { get { return null != _helpText; } }
 
         /// <summary>
         /// The help text for the argument.
         /// </summary>
         public string HelpText
         {
-            get { return this.helpText; }
-            set { this.helpText = value; }
+            get { return _helpText; }
+            set { _helpText = value; }
         }
-
-        private string shortName;
-        private string longName;
-        private string helpText;
-        private object defaultValue;
-        private ArgumentType type;
     }
 }

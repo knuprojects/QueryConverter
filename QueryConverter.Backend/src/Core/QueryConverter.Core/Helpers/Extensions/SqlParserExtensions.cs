@@ -30,8 +30,10 @@ public static class SqlParserExtensions
 
     public static List<WhereCondition> Conditions(this TSQLWhereClause whereClause)
     {
-        OperatorType op;
+        OperatorType operatorType;
+
         var conditions = new List<WhereCondition>();
+
         WhereCondition currentCondition = null;
 
         if (whereClause == null)
@@ -44,24 +46,20 @@ public static class SqlParserExtensions
 
             switch (token.Type)
             {
-                case TSQLTokenType.Identifier:  // column
-
-                    // save current condition
+                case TSQLTokenType.Identifier:
                     if (currentCondition != null)
                     {
                         conditions.Add(currentCondition);
                     }
 
                     currentCondition = new WhereCondition() { Column = token.Text.ToString() };
-
                     break;
                 case TSQLTokenType.Operator:
-                    op = WhereCondition.ToOperatorType(token.Text.ToString());
-                    if (op != OperatorType.Unknown)
+                    operatorType = WhereCondition.ToOperatorType(token.Text.ToString());
+                    if (operatorType != OperatorType.Unknown)
                     {
-                        currentCondition.Operator = op;
+                        currentCondition.Operator = operatorType;
                     }
-
                     break;
                 case TSQLTokenType.NumericLiteral:
                     currentCondition.Type = LiteralType.Numeric;
@@ -71,13 +69,11 @@ public static class SqlParserExtensions
                     currentCondition.Type = LiteralType.String;
                     currentCondition.Value = token.Text.ToString();
                     break;
-
                 case TSQLTokenType.Keyword:
-                    // keyword also contain operators (like "in" or "between")
-                    op = WhereCondition.ToOperatorType(token.Text.ToString());
-                    if (op != OperatorType.Unknown)
+                    operatorType = WhereCondition.ToOperatorType(token.Text.ToString());
+                    if (operatorType != OperatorType.Unknown)
                     {
-                        currentCondition.Operator = op;
+                        currentCondition.Operator = operatorType;
                     }
                     break;
 
@@ -102,7 +98,6 @@ public static class SqlParserExtensions
             }
         }
 
-        // save current condition
         if (currentCondition != null)
         {
             conditions.Add(currentCondition);
