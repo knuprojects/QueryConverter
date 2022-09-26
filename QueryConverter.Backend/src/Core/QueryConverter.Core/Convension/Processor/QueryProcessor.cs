@@ -13,14 +13,17 @@ namespace QueryConverter.Core.Convension.Processor
             _queryHelper = queryHelper;
         }
 
-        public async Task ProcessSqlQuery(string sqlQuery)
+        public async Task<string> ProcessSqlQuery(string sqlQuery)
         {
+            string result;
             TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(sqlQuery)[0] as TSQLSelectStatement;
 
             if (statement.GroupBy == null)
-                await _queryHelper.HandleSelectStatement(statement);
+                result = await _queryHelper.HandleSelectStatement(statement);
             else
-                await _queryHelper.HandleGroupByStatement(statement);
+                result = await _queryHelper.HandleGroupByStatement(statement);
+
+            return result;
         }
     }
 }

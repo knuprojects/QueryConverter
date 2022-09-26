@@ -1,8 +1,7 @@
-﻿namespace QueryConverter.Core.Models
+﻿namespace QueryConverter.Presentation.Dto
 {
     public class ConvertModel
     {
         public string SQLQuery { get; set; } = null!;
-        public string ElasticQuery { get; set; } = null!;
     }
 }

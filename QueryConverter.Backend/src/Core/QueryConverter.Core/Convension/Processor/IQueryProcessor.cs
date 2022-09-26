@@ -2,6 +2,6 @@
 {
     public interface IQueryProcessor
     {
-        Task ProcessSqlQuery(string sqlQuery);
+        Task<string> ProcessSqlQuery(string sqlQuery);
     }
 }

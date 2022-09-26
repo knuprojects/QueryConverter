@@ -70,7 +70,7 @@ namespace QueryConverter.Core.Convension.Handlers
             return conditionsList;
         }
 
-        public async Task HandleGroupByStatement(TSQLSelectStatement statement)
+        public async Task<string> HandleGroupByStatement(TSQLSelectStatement statement)
         {
             var table = statement.From.Table().Index;
             var conditions = statement.Where.Conditions();
@@ -118,9 +118,11 @@ namespace QueryConverter.Core.Convension.Handlers
             }}".PrettyJson();
 
             ElasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+
+            return ElasticQuery;
         }
 
-        public async Task HandleSelectStatement(TSQLSelectStatement statement)
+        public async Task<string> HandleSelectStatement(TSQLSelectStatement statement)
         {
             var table = statement.From.Table().Index;
             var conditions = statement.Where.Conditions();
@@ -147,6 +149,8 @@ namespace QueryConverter.Core.Convension.Handlers
             jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
 
             ElasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+
+            return ElasticQuery;
         }
     }
 }
