@@ -1,4 +1,4 @@
-﻿namespace QueryConverter.Presentation.Dto
+﻿namespace QueryConverter.Shared.Dto
 {
     public class ConvertModel
     {
