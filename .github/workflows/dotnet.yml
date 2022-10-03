@@ -5,10 +5,13 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+    
+env:
+  DOTNET_VERSION: '6.0.x'
+  SOLUTION_PATH: ./QueryConverter.Backend/src/Presentation/QueryConverter.Presentation/QueryConverter.Presentation.csproj
+  
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -16,10 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
+       dotnet-version: ${{ env.DOTNET_VERSION }}
+
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: ${{ env.SOLUTION_PATH }}
