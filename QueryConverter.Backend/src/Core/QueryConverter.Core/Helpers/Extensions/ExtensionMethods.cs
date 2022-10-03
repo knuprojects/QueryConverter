@@ -24,4 +24,12 @@ public static class ExtensionMethods
             type == typeof(bool) ||
             type.IsEnum);
     }
+
+    // TODO: do smth with to string because return value is number not a query
+    public static string SplitQuery(ref string query)
+    {
+        var resultQuery = query.Split('\n').Length + 2;
+
+        return resultQuery.ToString();
+    }
 }

@@ -1,11 +1,12 @@
-﻿using TSQL.Statements;
+﻿using QueryConverter.Shared.Dto;
+using TSQL.Statements;
 
 namespace QueryConverter.Core.Convension.Handlers
 {
     public interface IQueryHandler
     {
-        Task<string> HandleSelectStatement(TSQLSelectStatement statement);
-        Task<string> HandleGroupByStatement(TSQLSelectStatement statement);
+        Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement);
+        Task<ResultModel> HandleGroupByStatement(TSQLSelectStatement statement);
         Task<List<string>> GetConditionStatement(List<WhereCondition> conditions);
     }
 }

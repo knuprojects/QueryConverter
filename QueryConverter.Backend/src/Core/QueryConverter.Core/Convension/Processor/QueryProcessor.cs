@@ -1,4 +1,5 @@
 ﻿using QueryConverter.Core.Convension.Handlers;
+using QueryConverter.Shared.Dto;
 using TSQL;
 using TSQL.Statements;
 
@@ -7,15 +8,15 @@ namespace QueryConverter.Core.Convension.Processor
     public class QueryProcessor : IQueryProcessor
     {
         private readonly IQueryHandler _queryHelper;
+        private ResultModel result;
 
         public QueryProcessor(IQueryHandler queryHelper)
         {
             _queryHelper = queryHelper;
         }
 
-        public async Task<string> ProcessSqlQuery(string sqlQuery)
+        public async Task<ResultModel> ProcessSqlQuery(string sqlQuery)
         {
-            string result;
             TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(sqlQuery)[0] as TSQLSelectStatement;
 
             if (statement.GroupBy == null)

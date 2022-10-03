@@ -14,7 +14,7 @@
       @Html.TextAreaFor(m => m.SQLQuery, new { @class = "form-control", @rows = 10 })
       <input type="submit" value="Convert" class="btn btn-primary" style="margin-top: 3px;" />
 
-@*      @if (!string.IsNullOrWhiteSpace(Model.ElasticQuery)) {
+      @if (!string.IsNullOrWhiteSpace(Model.ElasticQuery)) {
         <div style="height: 35px"><!--vertical space--></div>
         <div>
           <h3 style="display:inline">Converted Elastic Search query</h3>
@@ -22,7 +22,7 @@
         </div>
         
         <textarea id="txtElasticQuery" class="form-control" rows="@Model.ElasticQuery.Split('\n').Length + 2">@Html.Raw(Model.ElasticQuery)</textarea>
-      }*@
+      }
     </form>
 
   </div>

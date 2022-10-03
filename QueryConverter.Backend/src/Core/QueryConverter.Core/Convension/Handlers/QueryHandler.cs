@@ -3,13 +3,14 @@ using Newtonsoft.Json.Linq;
 using QueryConverter.Core.Consts;
 using QueryConverter.Core.Enums;
 using QueryConverter.Core.Helpers.Extensions;
+using QueryConverter.Shared.Dto;
 using TSQL.Statements;
 
 namespace QueryConverter.Core.Convension.Handlers
 {
     public class QueryHandler : IQueryHandler
     {
-        public string ElasticQuery { get; set; } = string.Empty;
+        private string elasticQuery;
 
         public async Task<List<string>> GetConditionStatement(List<WhereCondition> conditions)
         {
@@ -70,7 +71,7 @@ namespace QueryConverter.Core.Convension.Handlers
             return conditionsList;
         }
 
-        public async Task<string> HandleGroupByStatement(TSQLSelectStatement statement)
+        public async Task<ResultModel> HandleGroupByStatement(TSQLSelectStatement statement)
         {
             var table = statement.From.Table().Index;
             var conditions = statement.Where.Conditions();
@@ -117,12 +118,19 @@ namespace QueryConverter.Core.Convension.Handlers
                 {conditionsStatement}
             }}".PrettyJson();
 
-            ElasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+            elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
-            return ElasticQuery;
+            var query = ExtensionMethods.SplitQuery(ref elasticQuery);
+
+            var result = new ResultModel()
+            {
+                ElasticQuery = query
+            };
+
+            return result;
         }
 
-        public async Task<string> HandleSelectStatement(TSQLSelectStatement statement)
+        public async Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement)
         {
             var table = statement.From.Table().Index;
             var conditions = statement.Where.Conditions();
@@ -148,9 +156,16 @@ namespace QueryConverter.Core.Convension.Handlers
 
             jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
 
-            ElasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+            elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
-            return ElasticQuery;
+            var query = ExtensionMethods.SplitQuery(ref elasticQuery);
+
+            var result = new ResultModel()
+            {
+                ElasticQuery  = query
+            };
+
+            return result;
         }
     }
 }

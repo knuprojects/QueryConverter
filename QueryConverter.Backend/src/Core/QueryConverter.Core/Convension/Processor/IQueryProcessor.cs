@@ -1,7 +1,9 @@
-﻿namespace QueryConverter.Core.Convension.Processor
+﻿using QueryConverter.Shared.Dto;
+
+namespace QueryConverter.Core.Convension.Processor
 {
     public interface IQueryProcessor
     {
-        Task<string> ProcessSqlQuery(string sqlQuery);
+        Task<ResultModel> ProcessSqlQuery(string sqlQuery);
     }
 }
