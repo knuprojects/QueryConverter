@@ -25,6 +25,15 @@ public static class ExtensionMethods
             type.IsEnum);
     }
 
+    /// <summary>
+    /// For switch same case. Example: var x when x.In(value, value, value) => "value, value, or value",
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="value"></param>
+    /// <param name="values"></param>
+    /// <returns></returns>
+    public static bool In<T>(this T value, params T[] values) => values.Contains(value);
+
     // TODO: do smth with to string because return value is number not a query
     public static string SplitQuery(ref string query)
     {

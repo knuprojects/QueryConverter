@@ -20,6 +20,19 @@ namespace QueryConverter.Core.Convension
             {
                 string trimmedValue = value.Trim('\'');
 
+                //var result = Operator switch
+                //{
+                //    var x when
+                //        x == OperatorType.Equal ||
+                //        x == OperatorType.GreaterThan ||
+                //        x == OperatorType.GreaterThanOrEquals ||
+                //        x == OperatorType.LessThan ||
+                //        x == OperatorType.LessThanOrEquals => _singularValue = trimmedValue,
+                //    OperatorType.In => _inValues.Add(trimmedValue),
+                //    OperatorType.Between => _betweenValues.Add(trimmedValue),
+                //    OperatorType.Like => _singularValue = trimmedValue
+                //};
+
                 switch (Operator)
                 {
                     case OperatorType.Equal:
@@ -76,50 +89,31 @@ namespace QueryConverter.Core.Convension
 
         public static OperatorType ToOperatorType(string operatorType)
         {
-            switch (operatorType.ToLower())
+            return operatorType.ToLower() switch
             {
-                case "=":
-                    return OperatorType.Equal;
-                case ">":
-                    return OperatorType.GreaterThan;
-                case ">=":
-                    return OperatorType.GreaterThanOrEquals;
-                case "<":
-                    return OperatorType.LessThan;
-                case "<=":
-                    return OperatorType.LessThanOrEquals;
-                case "in":
-                    return OperatorType.In;
-                case "between":
-                    return OperatorType.Between;
-                case "like":
-                    return OperatorType.Like;
-                default:
-                    return OperatorType.Unknown;
-            }
+                "=" => OperatorType.Equal,
+                ">" => OperatorType.GreaterThan,
+                ">=" => OperatorType.GreaterThanOrEquals,
+                "<" => OperatorType.LessThan,
+                "<=" => OperatorType.LessThanOrEquals,
+                "in" => OperatorType.In,
+                "between" => OperatorType.Between,
+                "like" => OperatorType.Like,
+                _ => OperatorType.Unknown
+            };
         }
 
         public static string FromOperatorType(OperatorType operatorType)
         {
-            switch (operatorType)
+            return operatorType switch
             {
-                case OperatorType.Equal:
-                    return "=";
-                case OperatorType.GreaterThan:
-                    return "gt";
-                case OperatorType.GreaterThanOrEquals:
-                    return "gte";
-                case OperatorType.LessThan:
-                    return "lt";
-                case OperatorType.LessThanOrEquals:
-                    return "lte";
-
-                case OperatorType.In:
-                case OperatorType.Between:
-                default:
-                    return operatorType.ToString();
-            }
-
+                OperatorType.Equal => "=",
+                OperatorType.GreaterThan => "gt",
+                OperatorType.GreaterThanOrEquals => "gte",
+                OperatorType.LessThan => "lt",
+                OperatorType.LessThanOrEquals => "lte",
+                _ => operatorType.ToString()
+            };
         }
     }
 }

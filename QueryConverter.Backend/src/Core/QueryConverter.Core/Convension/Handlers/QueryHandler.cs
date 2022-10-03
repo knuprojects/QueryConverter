@@ -20,7 +20,6 @@ namespace QueryConverter.Core.Convension.Handlers
 
             foreach (var condition in conditions)
             {
-
                 switch (condition.Operator)
                 {
                     case OperatorType.Equal:
