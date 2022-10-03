@@ -1,0 +1,25 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    
+env:
+  DOTNET_VERSION: '6.0.x'
+  SOLUTION_PATH: ./QueryConverter.Backend/src/Presentation/QueryConverter.Presentation/QueryConverter.Presentation.csproj
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+       dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Build
+      run: ${{ env.SOLUTION_PATH }}
