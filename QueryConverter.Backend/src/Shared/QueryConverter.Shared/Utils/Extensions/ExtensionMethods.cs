@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QueryConverter.Core.Helpers.Extensions;
+namespace QueryConverter.Shared.Utils.Extensions;
 
 public static class ExtensionMethods
 {
@@ -35,10 +35,10 @@ public static class ExtensionMethods
     public static bool In<T>(this T value, params T[] values) => values.Contains(value);
 
     // TODO: do smth with to string because return value is number not a query
-    public static string SplitQuery(ref string query)
+    public static int SplitQuery(ref string query)
     {
         var resultQuery = query.Split('\n').Length + 2;
 
-        return resultQuery.ToString();
+        return resultQuery;
     }
 }

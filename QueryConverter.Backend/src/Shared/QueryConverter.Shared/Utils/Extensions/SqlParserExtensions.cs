@@ -1,9 +1,10 @@
 ﻿using QueryConverter.Core.Convension;
-using QueryConverter.Core.Enums;
+using QueryConverter.Shared.Types.Convension;
+using QueryConverter.Types.Shared.Enums;
 using TSQL.Clauses;
 using TSQL.Tokens;
 
-namespace QueryConverter.Core.Helpers.Extensions;
+namespace QueryConverter.Shared.Utils.Extensions;
 
 public static class SqlParserExtensions
 {

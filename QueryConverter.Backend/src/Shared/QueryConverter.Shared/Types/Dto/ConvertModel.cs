@@ -1,4 +1,4 @@
-﻿namespace QueryConverter.Shared.Dto
+﻿namespace QueryConverter.Types.Shared.Dto
 {
     public class ConvertModel
     {

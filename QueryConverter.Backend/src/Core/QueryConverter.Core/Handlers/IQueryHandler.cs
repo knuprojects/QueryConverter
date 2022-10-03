@@ -1,7 +1,8 @@
-﻿using QueryConverter.Shared.Dto;
+﻿using QueryConverter.Core.Convension;
+using QueryConverter.Types.Shared.Dto;
 using TSQL.Statements;
 
-namespace QueryConverter.Core.Convension.Handlers
+namespace QueryConverter.Core.Handlers
 {
     public interface IQueryHandler
     {

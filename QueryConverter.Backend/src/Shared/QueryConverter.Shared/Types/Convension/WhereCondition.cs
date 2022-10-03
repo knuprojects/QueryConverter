@@ -1,4 +1,5 @@
-﻿using QueryConverter.Core.Enums;
+﻿using QueryConverter.Shared.Types.Convension;
+using QueryConverter.Types.Shared.Enums;
 
 namespace QueryConverter.Core.Convension
 {

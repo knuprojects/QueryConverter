@@ -1,6 +1,6 @@
-﻿using QueryConverter.Shared.Dto;
+﻿using QueryConverter.Types.Shared.Dto;
 
-namespace QueryConverter.Core.Convension.Processor
+namespace QueryConverter.Core.Processor
 {
     public interface IQueryProcessor
     {

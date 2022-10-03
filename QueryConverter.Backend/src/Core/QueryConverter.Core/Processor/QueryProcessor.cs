@@ -1,9 +1,9 @@
-﻿using QueryConverter.Core.Convension.Handlers;
-using QueryConverter.Shared.Dto;
+﻿using QueryConverter.Core.Handlers;
+using QueryConverter.Types.Shared.Dto;
 using TSQL;
 using TSQL.Statements;
 
-namespace QueryConverter.Core.Convension.Processor
+namespace QueryConverter.Core.Processor
 {
     public class QueryProcessor : IQueryProcessor
     {

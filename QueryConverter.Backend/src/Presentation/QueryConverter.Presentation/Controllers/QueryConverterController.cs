@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QueryConverter.Core.Convension.Processor;
-using QueryConverter.Shared.Dto;
+using QueryConverter.Core.Processor;
+using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Presentation.Controllers
 {

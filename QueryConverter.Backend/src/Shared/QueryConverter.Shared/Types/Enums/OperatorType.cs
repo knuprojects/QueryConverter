@@ -1,4 +1,4 @@
-﻿namespace QueryConverter.Core.Enums
+﻿namespace QueryConverter.Types.Shared.Enums
 {
     public enum OperatorType
     {

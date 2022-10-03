@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using QueryConverter.Core.Consts;
-using QueryConverter.Core.Enums;
-using QueryConverter.Core.Helpers.Extensions;
-using QueryConverter.Shared.Dto;
+using QueryConverter.Types.Shared.Consts;
+using QueryConverter.Types.Shared.Enums;
+using QueryConverter.Types.Shared.Dto;
 using TSQL.Statements;
+using QueryConverter.Core.Convension;
+using QueryConverter.Shared.Utils.Extensions;
 
-namespace QueryConverter.Core.Convension.Handlers
+namespace QueryConverter.Core.Handlers
 {
     public class QueryHandler : IQueryHandler
     {
@@ -119,11 +120,12 @@ namespace QueryConverter.Core.Convension.Handlers
 
             elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
-            var query = ExtensionMethods.SplitQuery(ref elasticQuery);
+            var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
 
             var result = new ResultModel()
             {
-                ElasticQuery = query
+                ElasticQuery = elasticQuery,
+                Rows = rows
             };
 
             return result;
@@ -157,11 +159,12 @@ namespace QueryConverter.Core.Convension.Handlers
 
             elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
-            var query = ExtensionMethods.SplitQuery(ref elasticQuery);
+            var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
 
             var result = new ResultModel()
             {
-                ElasticQuery  = query
+                ElasticQuery  = elasticQuery,
+                Rows = rows
             };
 
             return result;

@@ -1,5 +1,5 @@
-using QueryConverter.Core.Convension.Handlers;
-using QueryConverter.Core.Convension.Processor;
+using QueryConverter.Core.Handlers;
+using QueryConverter.Core.Processor;
 
 var builder = WebApplication.CreateBuilder(args);
 
