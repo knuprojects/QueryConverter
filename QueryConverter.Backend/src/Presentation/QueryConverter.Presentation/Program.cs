@@ -1,14 +1,9 @@
-using QueryConverter.Core.Handlers;
-using QueryConverter.Core.Processor;
+using QueryConverter.Presentation.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IQueryHandler, QueryHandler>();
-builder.Services.AddScoped<IQueryProcessor, QueryProcessor>();
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCore();
+builder.Services.AddDefaultServices();
 
 var app = builder.Build();
 

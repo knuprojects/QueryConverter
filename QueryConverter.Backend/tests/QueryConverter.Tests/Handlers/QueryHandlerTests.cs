@@ -1,4 +1,5 @@
 ﻿using QueryConverter.Core.Handlers;
+using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
 using QueryConverter.Tests.Utils;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Xunit;
 
 namespace QueryConverter.Tests.Handlers
 {
+    // Base test, Assert should be Fluent Assertions in the future
     public class QueryHandlerTests
     {
         private readonly IQueryHandler _queryHandler;
@@ -15,7 +17,6 @@ namespace QueryConverter.Tests.Handlers
             _queryHandler = queryHandler;
         }
 
-        // Base test, Assert should be Fluent Assertions in the future
         [Fact]
         public async Task HandleSelectStatement_Should_Return_Valid_Query()
         {
@@ -23,23 +24,23 @@ namespace QueryConverter.Tests.Handlers
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithFilter);
 
             // Act
-             var result = _queryHandler.HandleSelectStatement(statement);
+             var result = await _queryHandler.HandleSelectStatement(statement);
 
             // Assert
             Assert.NotNull(result);
         }
 
         [Fact]
-        public async Task HandleSelectStatement_Should_Be_Exception()
+        public void HandleSelectStatement_Should_Be_Exception()
         {
             // Arrange
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.InvalidSelectWithFilter);
 
             // Act
-            _queryHandler.HandleSelectStatement(statement);
+            var result = _queryHandler.HandleSelectStatement(statement);
 
             // Assert
-            Assert.Null(null);
+            Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
 
         [Fact]
@@ -49,23 +50,23 @@ namespace QueryConverter.Tests.Handlers
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithFilterAndGroupBy);
 
             // Act
-            var result = _queryHandler.HandleGroupByStatement(statement);
+            var result = await _queryHandler.HandleGroupByStatement(statement);
 
             // Assert
             Assert.NotNull(result);
         }
 
         [Fact]
-        public async Task HandleGroupByStatement_Should_Be_Exception()
+        public void HandleGroupByStatement_Should_Be_Exception()
         {
             // Arrange
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.InvalidSelectWithFilterAndGroupBy);
 
             // Act
-            _queryHandler.HandleGroupByStatement(statement);
+            var result = _queryHandler.HandleGroupByStatement(statement);
 
             // Assert
-            Assert.Null(null);
+            Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
     }
 }
