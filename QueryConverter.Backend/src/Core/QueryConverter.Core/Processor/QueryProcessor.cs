@@ -1,4 +1,6 @@
-﻿using QueryConverter.Core.Handlers;
+﻿using QueryConverter.Core.ExceptionCodes;
+using QueryConverter.Core.Handlers;
+using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Types.Shared.Dto;
 using TSQL;
 using TSQL.Statements;
@@ -17,14 +19,21 @@ namespace QueryConverter.Core.Processor
 
         public async Task<ResultModel> ProcessSqlQuery(string sqlQuery)
         {
-            TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(sqlQuery)[0] as TSQLSelectStatement;
+            try
+            {
+                TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(sqlQuery)[0] as TSQLSelectStatement;
 
-            if (statement.GroupBy == null)
-                result = await _queryHelper.HandleSelectStatement(statement);
-            else
-                result = await _queryHelper.HandleGroupByStatement(statement);
+                if (statement.GroupBy == null)
+                    result = await _queryHelper.HandleSelectStatement(statement);
+                else
+                    result = await _queryHelper.HandleGroupByStatement(statement);
 
-            return result;
+                return result;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
+            }
         }
     }
 }
