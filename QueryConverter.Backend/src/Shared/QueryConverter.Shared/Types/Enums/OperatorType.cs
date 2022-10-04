@@ -10,6 +10,8 @@
         In,
         Between,
         Unknown,
-        Like
+        Like, 
+        Ascending,
+        Descending
     }
 }

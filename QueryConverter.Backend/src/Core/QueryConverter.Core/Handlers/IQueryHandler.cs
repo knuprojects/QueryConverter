@@ -7,5 +7,7 @@ namespace QueryConverter.Core.Handlers
     {
         Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement);
         Task<ResultModel> HandleGroupByStatement(TSQLSelectStatement statement);
+        Task<ResultModel> HandleAscendingStatement(TSQLSelectStatement statement);
+        Task<ResultModel> HandleDescendingStatement(TSQLSelectStatement statement);
     }
 }

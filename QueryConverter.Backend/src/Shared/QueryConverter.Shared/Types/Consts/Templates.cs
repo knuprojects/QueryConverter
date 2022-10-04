@@ -64,6 +64,14 @@
                 }
               }";
 
+        public const string OrderBy = @"
+                {
+                      ""sort"": {
+                        ""(column)"": { ""order"": ""(conditions)"" } 
+                      }
+                }
+            ";
+
         public static string SizeZero => @"""size"": 0";
     }
 }

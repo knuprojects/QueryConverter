@@ -1,15 +1,16 @@
-﻿using QueryConverter.Shared.Types.Convension;
-using QueryConverter.Types.Shared.Enums;
+﻿using QueryConverter.Types.Shared.Enums;
 
 namespace QueryConverter.Core.Convension
 {
     public class WhereCondition
     {
-        private List<string> _inValues = new ();
+        private List<string> _inValues = new();
 
-        private List<string> _betweenValues = new ();
+        private List<string> _betweenValues = new();
 
         private string _singularValue = string.Empty;
+        private string _ascendingValue = string.Empty;
+        private string _descendingValue = string.Empty;
 
         public string Column { get; set; } = String.Empty;
         public LiteralType Type { get; set; }
@@ -52,6 +53,13 @@ namespace QueryConverter.Core.Convension
                     case OperatorType.Like:
                         _singularValue = trimmedValue;
                         break;
+                    case OperatorType.Ascending:
+                        _ascendingValue = trimmedValue;
+                        break;
+                    case OperatorType.Descending:
+                        _ascendingValue = trimmedValue;
+                        break;
+
                 }
             }
         }
@@ -100,6 +108,8 @@ namespace QueryConverter.Core.Convension
                 "in" => OperatorType.In,
                 "between" => OperatorType.Between,
                 "like" => OperatorType.Like,
+                "asc" => OperatorType.Ascending,
+                "desc" => OperatorType.Descending,
                 _ => OperatorType.Unknown
             };
         }
@@ -113,6 +123,8 @@ namespace QueryConverter.Core.Convension
                 OperatorType.GreaterThanOrEquals => "gte",
                 OperatorType.LessThan => "lt",
                 OperatorType.LessThanOrEquals => "lte",
+                OperatorType.Ascending => "asc",
+                OperatorType.Descending => "desc",
                 _ => operatorType.ToString()
             };
         }
