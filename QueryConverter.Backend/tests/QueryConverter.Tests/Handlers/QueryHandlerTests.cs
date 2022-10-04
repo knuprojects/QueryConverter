@@ -18,7 +18,7 @@ namespace QueryConverter.Tests.Handlers
         }
 
         [Fact]
-        public async Task HandleSelectStatement_Should_Return_Valid_Query()
+        public async Task HandleSelectStatementWithFilter_Should_Return_Valid_Query()
         {
             // Arrange
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithFilter);
@@ -31,7 +31,7 @@ namespace QueryConverter.Tests.Handlers
         }
 
         [Fact]
-        public void HandleSelectStatement_Should_Be_Exception()
+        public void HandleSelectStatementWithFilter_Should_Be_Exception()
         {
             // Arrange
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.InvalidSelectWithFilter);
@@ -44,7 +44,33 @@ namespace QueryConverter.Tests.Handlers
         }
 
         [Fact]
-        public async Task HandleGroupByStatement_Should_Return_Valid_Query()
+        public async Task HandleSelectStatementWithFilters_Should_Return_Valid_Query()
+        {
+            // Arrange
+            var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithFilters);
+
+            // Act
+            var result = await _queryHandler.HandleSelectStatement(statement);
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void HandleSelectStatementWithFilters_Should_Be_Exception()
+        {
+            // Arrange
+            var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.InvalidSelectWithFilters);
+
+            // Act
+            var result = _queryHandler.HandleSelectStatement(statement);
+
+            // Assert
+            Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
+        }
+
+        [Fact]
+        public async Task HandleGroupByStatementWithGroupBy_Should_Return_Valid_Query()
         {
             // Arrange
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithFilterAndGroupBy);
@@ -57,7 +83,7 @@ namespace QueryConverter.Tests.Handlers
         }
 
         [Fact]
-        public void HandleGroupByStatement_Should_Be_Exception()
+        public void HandleGroupByStatementWithGroupBy_Should_Be_Exception()
         {
             // Arrange
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.InvalidSelectWithFilterAndGroupBy);

@@ -92,22 +92,14 @@ namespace QueryConverter.Core.Handlers
                     string template = Templates.GroupBy.Replace("(column)", field.Column);
 
                     if (field == fields.Last())
-                    {
                         template = template.Replace("(additionalAggregation)", "");
-                    }
                     else
-                    {
                         template = template.Replace("(additionalAggregation)", nextAggregationMarker);
-                    }
 
                     if (groupByStatement.Contains(nextAggregationMarker))
-                    {
                         groupByStatement = groupByStatement.Replace(nextAggregationMarker, "," + Environment.NewLine + template);
-                    }
                     else
-                    {
                         groupByStatement = template;
-                    }
                 }
                 #endregion
 
@@ -117,10 +109,10 @@ namespace QueryConverter.Core.Handlers
                 string sizeStatement = Templates.SizeZero;
 
                 string jsonPortion = $@"{{
-                {sizeStatement},
-                {groupByStatement},
-                {conditionsStatement}
-            }}".PrettyJson();
+                       {sizeStatement},
+                       {groupByStatement},
+                       {conditionsStatement}
+                       }}".PrettyJson();
 
                 elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
@@ -163,9 +155,9 @@ namespace QueryConverter.Core.Handlers
                 string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
 
                 string jsonPortion = $@"{{
-                {conditionsStatement}
-                {fieldStatement}
-            }}";
+                       {conditionsStatement}
+                       {fieldStatement}
+                       }}";
 
                 jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
 
