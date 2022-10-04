@@ -63,6 +63,10 @@ namespace QueryConverter.Core.Handlers
                                                     .Replace("(column)", condition.Column)
                                                     .Replace("(value)", condition.SingularValue.Replace("%", "*").ToLower());
                         break;
+                    case OperatorType.Descending:
+                        conditionText = Templates.OrderBy
+                            .Replace("(conditions)",condition. )
+                        break;
                     case OperatorType.Unknown:
                         break;
                 }
@@ -177,6 +181,47 @@ namespace QueryConverter.Core.Handlers
             {
                 throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
             }
+
+            public Task<ResultModel> HandleAscendingStatement(TSQLSelectStatement statement)
+            {
+                try
+                {
+                    var table = statement.From.Table().Index;
+                    var conditions = statement.Where.Conditions();
+                    var fields = statement.Select.Fields();
+
+                    string tableStatement = $"GET {table}/_search";
+
+                    #region Build Group By Statement
+                    string orderByStatement = string.Empty;
+
+                    foreach (var field in fields)
+                    {
+                        string template = Templates.OrderBy.Replace("(column)", field.Column);
+
+                        
+                    }
+                    #endregion
+
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
+                }
+            }
+
+            public Task<ResultModel> HandleDescendingStatement(TSQLSelectStatement statement)
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
+                }
+            }
+
 
         }
     }
