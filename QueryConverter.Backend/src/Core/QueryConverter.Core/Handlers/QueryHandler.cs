@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using QueryConverter.Types.Shared.Consts;
-using QueryConverter.Types.Shared.Enums;
-using QueryConverter.Types.Shared.Dto;
-using TSQL.Statements;
 using QueryConverter.Core.Convension;
-using QueryConverter.Shared.Utils.Extensions;
 using QueryConverter.Core.ExceptionCodes;
+using QueryConverter.Shared.Types.Convension;
 using QueryConverter.Shared.Types.Exceptions;
+using QueryConverter.Shared.Utils.Extensions;
+using QueryConverter.Types.Shared.Consts;
+using QueryConverter.Types.Shared.Dto;
+using QueryConverter.Types.Shared.Enums;
+using TSQL.Statements;
 
 namespace QueryConverter.Core.Handlers
 {
@@ -63,6 +64,27 @@ namespace QueryConverter.Core.Handlers
                                                     .Replace("(column)", condition.Column)
                                                     .Replace("(value)", condition.SingularValue.Replace("%", "*").ToLower());
                         break;
+                    case OperatorType.Unknown:
+                        break;
+                }
+
+                conditionsList.Add(conditionText);
+            }
+
+            return conditionsList;
+        }
+
+        public async Task<List<string>> GetOrderByConditionStatement(List<OrderByCondition> conditions)
+        {
+
+            string conditionText = string.Empty;
+
+            var conditionsList = new List<string>();
+
+            foreach (var condition in conditions)
+            {
+                switch (condition.Operator)
+                {
                     case OperatorType.Descending:
                         conditionText = Templates.OrderBy
                             .Replace("(conditions)", condition.DescdendingValue);
@@ -71,13 +93,9 @@ namespace QueryConverter.Core.Handlers
                         conditionText = Templates.OrderBy
                             .Replace("(conditions)", condition.AscendingValue);
                         break;
-                    case OperatorType.Unknown:
-                        break;
                 }
-
                 conditionsList.Add(conditionText);
             }
-
             return conditionsList;
         }
 
@@ -138,7 +156,7 @@ namespace QueryConverter.Core.Handlers
             {
                 throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
             }
-           
+
         }
 
         public async Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement)
@@ -192,7 +210,7 @@ namespace QueryConverter.Core.Handlers
             try
             {
                 var table = statement.From.Table().Index;
-                var conditions = statement.Where.Conditions();
+                var conditions = statement.OrderBy.OrderByConditions();
                 var fields = statement.Select.Fields();
 
                 string tableStatement = $"GET {table}/_search";
@@ -204,7 +222,7 @@ namespace QueryConverter.Core.Handlers
                     orderByStatement = Templates.OrderBy.Replace("(column)", field.Column);
                 }
 
-                List<string> conditionsList = await GetConditionStatement(conditions);
+                List<string> conditionsList = await GetOrderByConditionStatement(conditions);
                 string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
 
                 string jsonPortion = $@"{{

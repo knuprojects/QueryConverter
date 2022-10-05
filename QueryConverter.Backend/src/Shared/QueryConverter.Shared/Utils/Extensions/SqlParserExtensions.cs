@@ -106,4 +106,81 @@ public static class SqlParserExtensions
 
         return conditions;
     }
+    public static List<OrderByCondition> OrderByConditions(this TSQLOrderByClause orderByClause)
+    {
+        OperatorType operatorType;
+
+        var conditions = new List<OrderByCondition>();
+
+        OrderByCondition currentCondition = null;
+
+        if (orderByClause == null)
+        {
+            return conditions;
+        }
+
+        foreach (TSQLToken token in orderByClause.Tokens)
+        {
+
+            switch (token.Type)
+            {
+                case TSQLTokenType.Identifier:
+                    if (currentCondition != null)
+                    {
+                        conditions.Add(currentCondition);
+                    }
+
+                    currentCondition = new OrderByCondition() { Column = token.Text.ToString() };
+                    break;
+                case TSQLTokenType.Operator:
+                    operatorType = OrderByCondition.ToOperatorType(token.Text.ToString());
+                    if (operatorType != OperatorType.Unknown)
+                    {
+                        currentCondition.Operator = operatorType;
+                    }
+                    break;
+                case TSQLTokenType.NumericLiteral:
+                    currentCondition.Type = LiteralType.Numeric;
+                    currentCondition.Value = token.Text.ToString();
+                    break;
+                case TSQLTokenType.StringLiteral:
+                    currentCondition.Type = LiteralType.String;
+                    currentCondition.Value = token.Text.ToString();
+                    break;
+                case TSQLTokenType.Keyword:
+                    operatorType = OrderByCondition.ToOperatorType(token.Text.ToString());
+                    if (operatorType != OperatorType.Unknown)
+                    {
+                        currentCondition.Operator = operatorType;
+                    }
+                    break;
+
+                case TSQLTokenType.MoneyLiteral:
+                    break;
+                case TSQLTokenType.BinaryLiteral:
+                    break;
+                case TSQLTokenType.SystemIdentifier:
+                    break;
+                case TSQLTokenType.SingleLineComment:
+                    break;
+                case TSQLTokenType.MultilineComment:
+                    break;
+                case TSQLTokenType.Variable:
+                    break;
+                case TSQLTokenType.SystemVariable:
+                    break;
+                case TSQLTokenType.Whitespace:
+                    break;
+                case TSQLTokenType.Character:
+                    break;
+            }
+        }
+
+        if (currentCondition != null)
+        {
+            conditions.Add(currentCondition);
+        }
+
+        return conditions;
+    }
 }
