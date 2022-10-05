@@ -88,6 +88,22 @@ namespace QueryConverter.Core.Convension
             }
         }
 
+        public string DescdendingValue
+        {
+            get
+            {
+                return _descendingValue;
+            }
+        }
+
+        public string AscendingValue
+        {
+            get
+            {
+                return _ascendingValue;
+            }
+        }
+
         public bool IsComplete
         {
             get

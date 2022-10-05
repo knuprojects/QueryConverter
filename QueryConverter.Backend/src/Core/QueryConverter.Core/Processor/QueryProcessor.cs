@@ -23,10 +23,12 @@ namespace QueryConverter.Core.Processor
             {
                 TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(sqlQuery)[0] as TSQLSelectStatement;
 
-                if (statement.GroupBy == null)
+                if(statement.Select is not null)
                     result = await _queryHelper.HandleSelectStatement(statement);
-                else
+                else if(statement.GroupBy is not null)
                     result = await _queryHelper.HandleGroupByStatement(statement);
+                else if(statement.OrderBy is not null)
+                    result = await _queryHelper.HandleOrderByStatement(statement);
 
                 return result;
             }

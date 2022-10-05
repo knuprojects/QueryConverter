@@ -65,7 +65,11 @@ namespace QueryConverter.Core.Handlers
                         break;
                     case OperatorType.Descending:
                         conditionText = Templates.OrderBy
-                            .Replace("(conditions)",condition. )
+                            .Replace("(conditions)", condition.DescdendingValue);
+                        break;
+                    case OperatorType.Ascending:
+                        conditionText = Templates.OrderBy
+                            .Replace("(conditions)", condition.AscendingValue);
                         break;
                     case OperatorType.Unknown:
                         break;
@@ -181,48 +185,52 @@ namespace QueryConverter.Core.Handlers
             {
                 throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
             }
+        }
 
-            public Task<ResultModel> HandleAscendingStatement(TSQLSelectStatement statement)
+        public async Task<ResultModel> HandleOrderByStatement(TSQLSelectStatement statement)
+        {
+            try
             {
-                try
+                var table = statement.From.Table().Index;
+                var conditions = statement.Where.Conditions();
+                var fields = statement.Select.Fields();
+
+                string tableStatement = $"GET {table}/_search";
+
+                string orderByStatement = string.Empty;
+
+                foreach (var field in fields)
                 {
-                    var table = statement.From.Table().Index;
-                    var conditions = statement.Where.Conditions();
-                    var fields = statement.Select.Fields();
-
-                    string tableStatement = $"GET {table}/_search";
-
-                    #region Build Group By Statement
-                    string orderByStatement = string.Empty;
-
-                    foreach (var field in fields)
-                    {
-                        string template = Templates.OrderBy.Replace("(column)", field.Column);
-
-                        
-                    }
-                    #endregion
-
+                    orderByStatement = Templates.OrderBy.Replace("(column)", field.Column);
                 }
-                catch (Exception ex)
+
+                List<string> conditionsList = await GetConditionStatement(conditions);
+                string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
+
+                string jsonPortion = $@"{{
+                       {orderByStatement}
+                       {conditionsStatement}
+                       }}";
+
+                jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
+
+                elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+
+                var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
+
+                var result = new ResultModel()
                 {
-                    throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
-                }
+                    ElasticQuery = elasticQuery,
+                    Rows = rows
+                };
+
+                return result;
+
             }
-
-            public Task<ResultModel> HandleDescendingStatement(TSQLSelectStatement statement)
+            catch (Exception ex)
             {
-                try
-                {
-
-                }
-                catch (Exception ex)
-                {
-                    throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
-                }
+                throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
             }
-
-
         }
     }
 }
