@@ -103,7 +103,7 @@ public static class SqlParserExtensions
             conditions.Add(currentCondition);
         }
 
-        return conditions;
+         return conditions;
     }
     public static List<OrderByCondition> OrderByConditions(this TSQLOrderByClause orderByClause)
     {
