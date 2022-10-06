@@ -44,7 +44,6 @@ public static class SqlParserExtensions
 
         foreach (TSQLToken token in whereClause.Tokens)
         {
-
             switch (token.Type)
             {
                 case TSQLTokenType.Identifier:
@@ -121,7 +120,6 @@ public static class SqlParserExtensions
 
         foreach (TSQLToken token in orderByClause.Tokens)
         {
-
             switch (token.Type)
             {
                 case TSQLTokenType.Identifier:

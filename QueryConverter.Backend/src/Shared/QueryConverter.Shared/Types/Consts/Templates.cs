@@ -67,7 +67,7 @@
         public const string OrderBy = @"
                 {
                       ""sort"": {
-                        ""(column)"": { ""order"": ""(conditions)"" } 
+                        ""(column)"": { ""terms"": ""(conditions)"" } 
                       }
                 }
             ";

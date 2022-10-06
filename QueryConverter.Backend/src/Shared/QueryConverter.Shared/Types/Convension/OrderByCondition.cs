@@ -12,7 +12,6 @@ namespace QueryConverter.Shared.Types.Convension
         public LiteralType Type { get; set; }
         public OperatorType Operator { get; set; }
 
-
         public string Value
         {
             set
@@ -25,10 +24,9 @@ namespace QueryConverter.Shared.Types.Convension
                         _ascendingValue = trimmedValue;
                         break;
                     case OperatorType.Descending:
-                        _ascendingValue = trimmedValue;
+                        _descendingValue = trimmedValue;
                         break;
                 }
-
             }
         }
 
@@ -48,9 +46,9 @@ namespace QueryConverter.Shared.Types.Convension
             }
         }
 
-        public static OperatorType ToOperatorType(string operatorTYpe)
+        public static OperatorType ToOperatorType(string operatorType)
         {
-            return operatorTYpe switch
+            return operatorType switch
             {
                 "asc" => OperatorType.Ascending,
                 "desc" => OperatorType.Descending,
@@ -68,8 +66,5 @@ namespace QueryConverter.Shared.Types.Convension
                 _ => operatorType.ToString()
             };
         }
-
-
-
     }
 }
