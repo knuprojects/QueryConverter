@@ -20,19 +20,6 @@ namespace QueryConverter.Core.Convension
             {
                 string trimmedValue = value.Trim('\'');
 
-                //var result = Operator switch
-                //{
-                //    var x when
-                //        x == OperatorType.Equal ||
-                //        x == OperatorType.GreaterThan ||
-                //        x == OperatorType.GreaterThanOrEquals ||
-                //        x == OperatorType.LessThan ||
-                //        x == OperatorType.LessThanOrEquals => _singularValue = trimmedValue,
-                //    OperatorType.In => _inValues.Add(trimmedValue),
-                //    OperatorType.Between => _betweenValues.Add(trimmedValue),
-                //    OperatorType.Like => _singularValue = trimmedValue
-                //};
-
                 switch (Operator)
                 {
                     case OperatorType.Equal:
