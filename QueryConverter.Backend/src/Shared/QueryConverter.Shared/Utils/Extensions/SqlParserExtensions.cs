@@ -150,6 +150,7 @@ public static class SqlParserExtensions
                     if (operatorType != OperatorType.Unknown)
                     {
                         currentCondition.Operator = operatorType;
+                        currentCondition.Value = token.Text.ToString();
                     }
                     break;
 

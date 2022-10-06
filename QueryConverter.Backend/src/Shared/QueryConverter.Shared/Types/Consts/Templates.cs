@@ -10,8 +10,6 @@
                 }
             ";
 
-
-
         public const string InCondition = @"
                 {
                       ""terms"": {
@@ -41,6 +39,17 @@
                 }
             ";
 
+        public const string OrderCondition = @"
+                {
+                      ""sort"": [
+                        {
+                          ""(column)"": {
+                            ""order"": ""(operator)""
+                          }                            
+                      }]
+                }
+            ";
+
         public const string LikeCondition = @"
                 {
                       ""wildcard"": {
@@ -57,20 +66,12 @@
                 }
             }";
 
-        public const string GroupBy = @"
+        public const string ConditionBy = @"
               ""aggregations"": {
                 ""(column)"": {
                   ""terms"": { ""field"": ""(column).keyword"" }(additionalAggregation)
                 }
               }";
-
-        public const string OrderBy = @"
-                {
-                      ""sort"": {
-                        ""(column)"": { ""terms"": ""(conditions)"" } 
-                      }
-                }
-            ";
 
         public static string SizeZero => @"""size"": 0";
     }
