@@ -94,5 +94,31 @@ namespace QueryConverter.Tests.Handlers
             // Assert
             Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
+
+        [Fact]
+        public async Task HandleOrderByStatement_Should_Return_Valid_Query()
+        {
+            // Arrange
+            var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithOrderBy);
+
+            // Act
+            var result = await _queryHandler.HandleGroupByStatement(statement);
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void HandleOrderByStatement_Should_Be_Exception()
+        {
+            // Arrange
+            var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.InvalidSelectWithOrderBy);
+
+            // Act
+            var result = _queryHandler.HandleGroupByStatement(statement);
+
+            // Assert
+            Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
+        }
     }
 }
