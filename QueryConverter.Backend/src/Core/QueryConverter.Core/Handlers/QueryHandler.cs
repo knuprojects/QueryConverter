@@ -86,17 +86,65 @@ namespace QueryConverter.Core.Handlers
                 switch (condition.Operator)
                 {
                     case OperatorType.Descending:
-                        conditionText = Templates.OrderBy
-                            .Replace("(conditions)", condition.DescdendingValue);
+                        conditionText = Templates.OrderCondition
+                            .Replace("(column)", condition.Column)
+                            .Replace("(operator)", condition.DescdendingValue);
                         break;
                     case OperatorType.Ascending:
-                        conditionText = Templates.OrderBy
-                            .Replace("(conditions)", condition.AscendingValue);
+                        conditionText = Templates.OrderCondition
+                            .Replace("(column)", condition.Column)
+                            .Replace("(operator)", condition.AscendingValue);
                         break;
                 }
                 conditionsList.Add(conditionText);
             }
             return conditionsList;
+        }
+
+        public async Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement)
+        {
+            try
+            {
+                var table = statement.From.Table().Index;
+                var conditions = statement.Where.Conditions();
+                var fields = statement.Select.Fields();
+
+                string tableStatement = $"POST {table}/_search";
+
+                string fieldStatement = string.Empty;
+
+                if (fields.Count > 0 && fields[0].Column != "*")
+                {
+                    fieldStatement = string.Join(", ", fields.Select(x => "\"" + x.Column + "\""));
+                    fieldStatement = ", \"_source\": [" + fieldStatement + "]";
+                }
+
+                List<string> conditionsList = await GetConditionStatement(conditions);
+                string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
+
+                string jsonPortion = $@"{{
+                       {conditionsStatement}
+                       {fieldStatement}
+                       }}".PrettyJson();
+
+                jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
+
+                elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+
+                var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
+
+                var result = new ResultModel()
+                {
+                    ElasticQuery = elasticQuery,
+                    Rows = rows
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
+            }
         }
 
         public async Task<ResultModel> HandleGroupByStatement(TSQLSelectStatement statement)
@@ -115,7 +163,7 @@ namespace QueryConverter.Core.Handlers
 
                 foreach (var field in fields)
                 {
-                    string template = Templates.GroupBy.Replace("(column)", field.Column);
+                    string template = Templates.ConditionBy.Replace("(column)", field.Column);
 
                     if (field == fields.Last())
                         template = template.Replace("(additionalAggregation)", "");
@@ -159,52 +207,6 @@ namespace QueryConverter.Core.Handlers
 
         }
 
-        public async Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement)
-        {
-            try
-            {
-                var table = statement.From.Table().Index;
-                var conditions = statement.Where.Conditions();
-                var fields = statement.Select.Fields();
-
-                string tableStatement = $"POST {table}/_search";
-
-                string fieldStatement = string.Empty;
-
-                if (fields.Count > 0 && fields[0].Column != "*")
-                {
-                    fieldStatement = string.Join(", ", fields.Select(x => "\"" + x.Column + "\""));
-                    fieldStatement = ", \"_source\": [" + fieldStatement + "]";
-                }
-
-                List<string> conditionsList = await GetConditionStatement(conditions);
-                string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
-
-                string jsonPortion = $@"{{
-                       {conditionsStatement}
-                       {fieldStatement}
-                       }}";
-
-                jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
-
-                elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
-
-                var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
-
-                var result = new ResultModel()
-                {
-                    ElasticQuery = elasticQuery,
-                    Rows = rows
-                };
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw new QueryConverterException(Codes.InvalidArguments, $"{ex.Message}");
-            }
-        }
-
         public async Task<ResultModel> HandleOrderByStatement(TSQLSelectStatement statement)
         {
             try
@@ -216,21 +218,33 @@ namespace QueryConverter.Core.Handlers
                 string tableStatement = $"GET {table}/_search";
 
                 string orderByStatement = string.Empty;
+                const string nextAggregationMarker = "(addNextAggregationHere)";
 
                 foreach (var field in fields)
                 {
-                    orderByStatement = Templates.OrderBy.Replace("(column)", field.Column);
+                    string template = Templates.ConditionBy.Replace("(column)", field.Column);
+
+                    if (field == fields.Last())
+                        template = template.Replace("(additionalAggregation)", "");
+                    else
+                        template = template.Replace("(additionalAggregation)", nextAggregationMarker);
+
+                    if (orderByStatement.Contains(nextAggregationMarker))
+                        orderByStatement = orderByStatement.Replace(nextAggregationMarker, "," + Environment.NewLine + template);
+                    else
+                        orderByStatement = template;
                 }
 
                 List<string> conditionsList = await GetOrderByConditionStatement(conditions);
                 string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
 
-                string jsonPortion = $@"{{
-                       {orderByStatement}
-                       {conditionsStatement}
-                       }}";
+                string sizeStatement = Templates.SizeZero;
 
-                jsonPortion = JToken.Parse(jsonPortion).ToString(Formatting.Indented);
+                string jsonPortion = $@"{{
+                       {sizeStatement},
+                       {orderByStatement},
+                       {conditionsStatement}
+                       }}".PrettyJson();
 
                 elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
