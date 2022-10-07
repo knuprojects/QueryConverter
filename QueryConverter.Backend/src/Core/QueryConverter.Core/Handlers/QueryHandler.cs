@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using QueryConverter.Core.Convension;
 using QueryConverter.Core.ExceptionCodes;
 using QueryConverter.Shared.Types.Convension;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Shared.Utils.Extensions;
+using QueryConverter.Shared.Utils.Extensions.Conditions;
 using QueryConverter.Types.Shared.Consts;
 using QueryConverter.Types.Shared.Dto;
 using QueryConverter.Types.Shared.Enums;
@@ -16,7 +16,7 @@ namespace QueryConverter.Core.Handlers
     {
         private string elasticQuery;
 
-        public async Task<List<string>> GetConditionStatement(List<WhereCondition> conditions)
+        public async Task<List<string>> GetConditionStatement(List<GenericCondition> conditions)
         {
             string conditionText = string.Empty;
 
@@ -57,13 +57,23 @@ namespace QueryConverter.Core.Handlers
                     case OperatorType.LessThanOrEquals:
                         conditionText = Templates.ComparisonCondition
                                                     .Replace("(column)", condition.Column)
-                                                    .Replace("(operator)", WhereCondition.FromOperatorType(condition.Operator))
+                                                    .Replace("(operator)", GenericCondition.FromOperatorType(condition.Operator))
                                                     .Replace("(value)", condition.SingularValue);
                         break;
                     case OperatorType.Like:
                         conditionText = Templates.LikeCondition
                                                     .Replace("(column)", condition.Column)
                                                     .Replace("(value)", condition.SingularValue.Replace("%", "*").ToLower());
+                        break;
+                    case OperatorType.Descending:
+                        conditionText = Templates.OrderCondition
+                            .Replace("(column)", condition.Column)
+                            .Replace("(operator)", condition.DescdendingValue);
+                        break;
+                    case OperatorType.Ascending:
+                        conditionText = Templates.OrderCondition
+                            .Replace("(column)", condition.Column)
+                            .Replace("(operator)", condition.AscendingValue);
                         break;
                     case OperatorType.Unknown:
                         break;
@@ -75,39 +85,12 @@ namespace QueryConverter.Core.Handlers
             return conditionsList;
         }
 
-        public async Task<List<string>> GetOrderByConditionStatement(List<OrderByCondition> conditions)
-        {
-
-            string conditionText = string.Empty;
-
-            var conditionsList = new List<string>();
-
-            foreach (var condition in conditions)
-            {
-                switch (condition.Operator)
-                {
-                    case OperatorType.Descending:
-                        conditionText = Templates.OrderCondition
-                            .Replace("(column)", condition.Column)
-                            .Replace("(operator)", condition.DescdendingValue);
-                        break;
-                    case OperatorType.Ascending:
-                        conditionText = Templates.OrderCondition
-                            .Replace("(column)", condition.Column)
-                            .Replace("(operator)", condition.AscendingValue);
-                        break;
-                }
-                conditionsList.Add(conditionText);
-            }
-            return conditionsList;
-        }
-
         public async Task<ResultModel> HandleSelectStatement(TSQLSelectStatement statement)
         {
             try
             {
                 var table = statement.From.Table().Index;
-                var conditions = statement.Where.Conditions();
+                var conditions = statement.Where.Condition();
                 var fields = statement.Select.Fields();
 
                 string tableStatement = $"POST {table}/_search";
@@ -153,12 +136,11 @@ namespace QueryConverter.Core.Handlers
             try
             {
                 var table = statement.From.Table().Index;
-                var conditions = statement.Where.Conditions();
+                var conditions = statement.Where.Condition();
                 var fields = statement.Select.Fields();
 
                 string tableStatement = $"GET {table}/_search";
 
-                #region Build Group By Statement
                 string groupByStatement = string.Empty;
                 const string nextAggregationMarker = "(addNextAggregationHere)";
 
@@ -176,7 +158,6 @@ namespace QueryConverter.Core.Handlers
                     else
                         groupByStatement = template;
                 }
-                #endregion
 
                 List<string> conditionsList = await GetConditionStatement(conditions);
                 string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
@@ -213,7 +194,7 @@ namespace QueryConverter.Core.Handlers
             try
             {
                 var table = statement.From.Table().Index;
-                var conditions = statement.OrderBy.OrderByConditions();
+                var conditions = statement.OrderBy.Condition();
                 var fields = statement.Select.Fields();
 
                 string tableStatement = $"GET {table}/_search";
@@ -236,7 +217,7 @@ namespace QueryConverter.Core.Handlers
                         orderByStatement = template;
                 }
 
-                List<string> conditionsList = await GetOrderByConditionStatement(conditions);
+                List<string> conditionsList = await GetConditionStatement(conditions);
                 string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
 
                 string sizeStatement = Templates.SizeZero;

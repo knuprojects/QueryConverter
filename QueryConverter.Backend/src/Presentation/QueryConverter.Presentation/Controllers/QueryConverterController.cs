@@ -16,10 +16,10 @@ namespace QueryConverter.Presentation.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConvertQuery([FromBody] ConvertModel model)
+        public async Task<ResultModel> ConvertQuery([FromBody] ConvertModel model)
         {
-            var result = _queryProcessor.ProcessSqlQuery(model.SQLQuery);
-            return Ok(result);
+            var result = await _queryProcessor.ProcessSqlQuery(model.SQLQuery);
+            return result;
         }
     }
 }

@@ -1,14 +1,21 @@
 ﻿using QueryConverter.Types.Shared.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace QueryConverter.Core.Convension
+namespace QueryConverter.Shared.Types.Convension
 {
-    public class WhereCondition
+    public  class GenericCondition
     {
         private List<string> _inValues = new();
 
         private List<string> _betweenValues = new();
 
         private string _singularValue = string.Empty;
+        private string _ascendingValue = string.Empty;
+        private string _descendingValue = string.Empty;
 
         public string Column { get; set; } = String.Empty;
         public LiteralType Type { get; set; }
@@ -38,7 +45,13 @@ namespace QueryConverter.Core.Convension
                         break;
                     case OperatorType.Like:
                         _singularValue = trimmedValue;
-                        break;     
+                        break;
+                    case OperatorType.Ascending:
+                        _ascendingValue = trimmedValue;
+                        break;
+                    case OperatorType.Descending:
+                        _descendingValue = trimmedValue;
+                        break;
                 }
             }
         }
@@ -66,6 +79,21 @@ namespace QueryConverter.Core.Convension
                 return _singularValue;
             }
         }
+        public string DescdendingValue
+        {
+            get
+            {
+                return _descendingValue;
+            }
+        }
+
+        public string AscendingValue
+        {
+            get
+            {
+                return _ascendingValue;
+            }
+        }
 
         public bool IsComplete
         {
@@ -88,6 +116,8 @@ namespace QueryConverter.Core.Convension
                 "in" => OperatorType.In,
                 "between" => OperatorType.Between,
                 "like" => OperatorType.Like,
+                "asc" => OperatorType.Ascending,
+                "desc" => OperatorType.Descending,
                 _ => OperatorType.Unknown
             };
         }
@@ -102,6 +132,8 @@ namespace QueryConverter.Core.Convension
                 OperatorType.GreaterThanOrEquals => "gte",
                 OperatorType.LessThan => "lt",
                 OperatorType.LessThanOrEquals => "lte",
+                OperatorType.Ascending => "asc",
+                OperatorType.Descending => "desc",
                 _ => operatorType.ToString()
             };
         }
