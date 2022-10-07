@@ -52,6 +52,7 @@ namespace QueryConverter.Core.Handlers
                         break;
                     case OperatorType.GreaterThan:
                     case OperatorType.GreaterThanOrEquals:
+                    case OperatorType.NotEqual:
                     case OperatorType.LessThan:
                     case OperatorType.LessThanOrEquals:
                         conditionText = Templates.ComparisonCondition
