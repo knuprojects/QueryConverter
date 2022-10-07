@@ -23,6 +23,7 @@ namespace QueryConverter.Core.Convension
                 switch (Operator)
                 {
                     case OperatorType.Equal:
+                    case OperatorType.NotEqual:
                     case OperatorType.GreaterThan:
                     case OperatorType.GreaterThanOrEquals:
                     case OperatorType.LessThan:
@@ -79,6 +80,7 @@ namespace QueryConverter.Core.Convension
             return operatorType.ToLower() switch
             {
                 "=" => OperatorType.Equal,
+                "<>" => OperatorType.NotEqual,
                 ">" => OperatorType.GreaterThan,
                 ">=" => OperatorType.GreaterThanOrEquals,
                 "<" => OperatorType.LessThan,
@@ -95,6 +97,7 @@ namespace QueryConverter.Core.Convension
             return operatorType switch
             {
                 OperatorType.Equal => "=",
+                OperatorType.NotEqual => "<>",
                 OperatorType.GreaterThan => "gt",
                 OperatorType.GreaterThanOrEquals => "gte",
                 OperatorType.LessThan => "lt",
