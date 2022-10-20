@@ -2,8 +2,6 @@
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
 using QueryConverter.Tests.Utils;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace QueryConverter.Tests.Handlers
 {
@@ -24,7 +22,7 @@ namespace QueryConverter.Tests.Handlers
             var statement = ExtensionMethods.ConvertToTSQL(QueryTemplate.SelectWithFilter);
 
             // Act
-             var result = await _queryHandler.HandleSelectStatement(statement);
+            var result = await _queryHandler.HandleSelectStatement(statement);
 
             // Assert
             Assert.NotNull(result);

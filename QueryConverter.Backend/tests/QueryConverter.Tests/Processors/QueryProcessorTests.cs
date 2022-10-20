@@ -1,8 +1,6 @@
 ﻿using QueryConverter.Core.Processor;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace QueryConverter.Tests.Processors
 {
