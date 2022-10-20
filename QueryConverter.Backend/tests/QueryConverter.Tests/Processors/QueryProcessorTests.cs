@@ -1,6 +1,7 @@
 ﻿using QueryConverter.Core.Processor;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
+using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Tests.Processors
 {
@@ -20,7 +21,8 @@ namespace QueryConverter.Tests.Processors
             var result = await _queryProcessor.ProcessSqlQuery(QueryTemplate.SelectWithFilter);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -30,7 +32,8 @@ namespace QueryConverter.Tests.Processors
             var result = await _queryProcessor.ProcessSqlQuery(QueryTemplate.SelectWithFilters);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -40,7 +43,8 @@ namespace QueryConverter.Tests.Processors
             var result = await _queryProcessor.ProcessSqlQuery(QueryTemplate.SelectWithFilterAndGroupBy);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -53,6 +57,7 @@ namespace QueryConverter.Tests.Processors
             var result = _queryProcessor.ProcessSqlQuery(template);
 
             // Assert
+            result.Exception.Should().NotBeNull();
             Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
     }
