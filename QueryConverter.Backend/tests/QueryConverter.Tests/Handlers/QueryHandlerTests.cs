@@ -2,6 +2,8 @@
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
 using QueryConverter.Tests.Utils;
+using QueryConverter.Types.Shared.Dto;
+using System;
 
 namespace QueryConverter.Tests.Handlers
 {
@@ -25,7 +27,8 @@ namespace QueryConverter.Tests.Handlers
             var result = await _queryHandler.HandleSelectStatement(statement);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -38,6 +41,7 @@ namespace QueryConverter.Tests.Handlers
             var result = _queryHandler.HandleSelectStatement(statement);
 
             // Assert
+            result.Exception.Should().NotBeNull();
             Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
 
@@ -51,7 +55,8 @@ namespace QueryConverter.Tests.Handlers
             var result = await _queryHandler.HandleSelectStatement(statement);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -64,6 +69,7 @@ namespace QueryConverter.Tests.Handlers
             var result = _queryHandler.HandleSelectStatement(statement);
 
             // Assert
+            result.Exception.Should().NotBeNull();
             Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
 
@@ -77,7 +83,8 @@ namespace QueryConverter.Tests.Handlers
             var result = await _queryHandler.HandleGroupByStatement(statement);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -90,6 +97,7 @@ namespace QueryConverter.Tests.Handlers
             var result = _queryHandler.HandleGroupByStatement(statement);
 
             // Assert
+            result.Exception.Should().NotBeNull();
             Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
 
@@ -103,7 +111,8 @@ namespace QueryConverter.Tests.Handlers
             var result = await _queryHandler.HandleGroupByStatement(statement);
 
             // Assert
-            Assert.NotNull(result);
+            result.Should().BeOfType<ResultModel>();
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -116,6 +125,7 @@ namespace QueryConverter.Tests.Handlers
             var result = _queryHandler.HandleGroupByStatement(statement);
 
             // Assert
+            result.Exception.Should().NotBeNull();
             Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
         }
     }
