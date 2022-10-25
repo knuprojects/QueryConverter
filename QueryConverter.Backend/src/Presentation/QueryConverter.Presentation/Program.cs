@@ -3,6 +3,7 @@ using QueryConverter.Presentation.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCore();
+builder.Services.AddCqrs();
 builder.Services.AddDefaultServices();
 
 var app = builder.Build();
