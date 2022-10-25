@@ -1,4 +1,4 @@
-﻿using QueryConverter.Shared.Cqrs.Commands;
+using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Cqrs.Dispatchers;
 using QueryConverter.Shared.Cqrs.Queries;
 
