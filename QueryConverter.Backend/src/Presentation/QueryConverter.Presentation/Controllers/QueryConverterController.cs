@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QueryConverter.Core.Processor;
+using QueryConverter.Core.Handlers;
+using QueryConverter.Shared.Cqrs.Dispatchers;
 using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Presentation.Controllers
@@ -8,18 +9,19 @@ namespace QueryConverter.Presentation.Controllers
     [ApiController]
     public class QueryConverterController : ControllerBase
     {
-        private readonly IQueryProcessor _queryProcessor;
+        private readonly IDispatcher _dispatcher;
 
-        public QueryConverterController(IQueryProcessor queryProcessor)
+        public QueryConverterController(IDispatcher dispatcher)
         {
-            _queryProcessor = queryProcessor;
+            _dispatcher = dispatcher;
         }
 
         [HttpPost]
-        public async Task<ResultModel> ConvertQuery([FromBody] ConvertModel model)
+        public async Task<ActionResult<ResultModel>> ConvertSelectQuery([FromBody] SelectCommand command)
         {
-            var result = await _queryProcessor.ProcessSqlQuery(model.SQLQuery);
-            return result;
+            await _dispatcher.SendAsync(command);
+
+            return Ok();
         }
     }
 }
