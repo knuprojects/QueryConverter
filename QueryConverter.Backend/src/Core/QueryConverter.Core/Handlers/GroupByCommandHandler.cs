@@ -1,29 +1,30 @@
 ﻿using QueryConverter.Core.ExceptionCodes;
 using QueryConverter.Core.Processor;
+using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Shared.Utils.Extensions;
 using QueryConverter.Shared.Utils.Extensions.Conditions;
 using QueryConverter.Types.Shared.Consts;
 using QueryConverter.Types.Shared.Dto;
+using TSQL;
 using TSQL.Statements;
 
 namespace QueryConverter.Core.Handlers
 {
-    public class QueryHandler : IQueryHandler
+    public class GroupByCommandHandler : ICommandHandler<SQLCommand>
     {
-        private string elasticQuery;
-
-        public async Task<ResultModel> HandleOrderByStatement(TSQLSelectStatement statement)
+        public Task HandleAsync(SQLCommand command, CancellationToken cancellationToken = default)
         {
+            TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(command.SQLQuery)[0] as TSQLSelectStatement;
             try
             {
                 var table = statement.From.Table().Index;
-                var conditions = statement.OrderBy.Condition();
+                var conditions = statement.Where.Condition();
                 var fields = statement.Select.Fields();
 
                 string tableStatement = $"GET {table}/_search";
 
-                string orderByStatement = string.Empty;
+                string groupByStatement = string.Empty;
                 const string nextAggregationMarker = "(addNextAggregationHere)";
 
                 foreach (var field in fields)
@@ -35,10 +36,10 @@ namespace QueryConverter.Core.Handlers
                     else
                         template = template.Replace("(additionalAggregation)", nextAggregationMarker);
 
-                    if (orderByStatement.Contains(nextAggregationMarker))
-                        orderByStatement = orderByStatement.Replace(nextAggregationMarker, "," + Environment.NewLine + template);
+                    if (groupByStatement.Contains(nextAggregationMarker))
+                        groupByStatement = groupByStatement.Replace(nextAggregationMarker, "," + Environment.NewLine + template);
                     else
-                        orderByStatement = template;
+                        groupByStatement = template;
                 }
 
                 List<string> conditionsList = ConditionStatement.GetConditionStatement(conditions);
@@ -48,11 +49,11 @@ namespace QueryConverter.Core.Handlers
 
                 string jsonPortion = $@"{{
                        {sizeStatement},
-                       {orderByStatement},
+                       {groupByStatement},
                        {conditionsStatement}
                        }}".PrettyJson();
 
-                elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+                var elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
                 var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
 
@@ -62,8 +63,7 @@ namespace QueryConverter.Core.Handlers
                     Rows = rows
                 };
 
-                return result;
-
+                return Task.FromResult(result);
             }
             catch (Exception ex)
             {
