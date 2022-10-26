@@ -1,20 +1,22 @@
 ﻿using QueryConverter.Core.ExceptionCodes;
 using QueryConverter.Core.Processor;
+using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Shared.Utils.Extensions;
 using QueryConverter.Shared.Utils.Extensions.Conditions;
 using QueryConverter.Types.Shared.Consts;
 using QueryConverter.Types.Shared.Dto;
+using TSQL;
 using TSQL.Statements;
 
 namespace QueryConverter.Core.Handlers
 {
-    public class QueryHandler : IQueryHandler
+    public class OrderByCommandHandler : ICommandHandler<SQLCommand>
     {
-        private string elasticQuery;
-
-        public async Task<ResultModel> HandleOrderByStatement(TSQLSelectStatement statement)
+        public Task HandleAsync(SQLCommand command, CancellationToken cancellationToken = default)
         {
+            TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(command.SQLQuery)[0] as TSQLSelectStatement;
+
             try
             {
                 var table = statement.From.Table().Index;
@@ -52,7 +54,7 @@ namespace QueryConverter.Core.Handlers
                        {conditionsStatement}
                        }}".PrettyJson();
 
-                elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
+                var elasticQuery = $"{tableStatement}{Environment.NewLine}{jsonPortion}";
 
                 var rows = ExtensionMethods.SplitQuery(ref elasticQuery);
 
@@ -62,7 +64,7 @@ namespace QueryConverter.Core.Handlers
                     Rows = rows
                 };
 
-                return result;
+                return Task.FromResult(result);
 
             }
             catch (Exception ex)
