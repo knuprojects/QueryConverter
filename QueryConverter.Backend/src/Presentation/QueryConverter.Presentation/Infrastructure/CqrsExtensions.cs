@@ -1,3 +1,6 @@
+using QueryConverter.Core.Handlers;
+using QueryConverter.Core.Handlers.Commands;
+using QueryConverter.Core.Utils;
 using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Cqrs.Dispatchers;
 using QueryConverter.Shared.Cqrs.Queries;
@@ -30,10 +33,14 @@ namespace QueryConverter.Presentation.Infrastructure
         public static IServiceCollection AddCommands(this IServiceCollection services)
         {
             services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
-            services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                    .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
-                    .AsImplementedInterfaces()
-                    .WithScopedLifetime());
+
+            services.AddScoped<ICommand, SelectCommand>();
+            services.AddScoped<ICommandHandler<SelectCommand>, SelectCommandHandler>();
+
+            //services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+            //        .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
+            //        .AsImplementedInterfaces()
+            //        .WithScopedLifetime());
 
             return services;
         }

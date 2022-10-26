@@ -2,7 +2,7 @@
 
 namespace QueryConverter.Core.Handlers
 {
-    public class SQLCommand : ICommand
+    public class SelectCommand : ICommand
     {
         public string SQLQuery { get; set; }
     }

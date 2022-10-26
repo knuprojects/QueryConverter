@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QueryConverter.Core.Handlers;
-using QueryConverter.Core.Processor;
 using System;
 
 namespace QueryConverter.Tests
@@ -26,11 +25,11 @@ namespace QueryConverter.Tests
 
             _built = true;
 
-            _defaultBuilder.ConfigureServices((context, services) =>
-            {
-                services.AddScoped<IQueryHandler, QueryHandler>();
-                services.AddScoped<IQueryProcessor, QueryProcessor>();
-            });
+            //_defaultBuilder.ConfigureServices((context, services) =>
+            //{
+            //    services.AddScoped<IQueryHandler, QueryHandler>();
+            //    services.AddScoped<IQueryProcessor, QueryProcessor>();
+            //});
 
             _services = _defaultBuilder.Build().Services;
 
