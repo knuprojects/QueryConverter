@@ -1,5 +1,4 @@
-﻿using QueryConverter.Core.Processor;
-using QueryConverter.Shared.Types.Exceptions;
+﻿using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
 using QueryConverter.Types.Shared.Dto;
 
