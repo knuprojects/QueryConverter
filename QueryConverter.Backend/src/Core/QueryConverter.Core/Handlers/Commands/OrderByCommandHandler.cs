@@ -5,12 +5,13 @@ using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Shared.Utils.Extensions.Conditions;
 using QueryConverter.Types.Shared.Consts;
+using QueryConverter.Types.Shared.Dto;
 using TSQL;
 using TSQL.Statements;
 
 namespace QueryConverter.Core.Handlers.Commands
 {
-    public class OrderByCommandHandler : ICommandHandler<OrderByCommand>
+    public class OrderByCommandHandler : ICommandHandler<OrderByCommand, ResultModel>
     {
         private readonly ICondition _condition;
 
@@ -19,17 +20,17 @@ namespace QueryConverter.Core.Handlers.Commands
             _condition = condition;
         }
 
-        public Task HandleAsync(OrderByCommand command, CancellationToken cancellationToken = default)
+        public Task<ResultModel> HandleAsync(OrderByCommand command, CancellationToken cancellationToken = default)
         {
             TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(command.SQLQuery)[0] as TSQLSelectStatement;
 
-            var factory = new StatementFactory(statement);
+            var factory = new StatementFactory();
 
             try
             {
                 var conditions = statement.OrderBy.Condition();
 
-                var statementGenerator = factory.StatementGenerator(new OperationByStatementGenerator());
+                var statementGenerator = factory.StatementGenerator(new OperationByStatementGenerator(), statement);
 
                 List<string> conditionsList = ConditionStatement.GetConditionStatement(conditions);
 

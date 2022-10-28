@@ -17,7 +17,7 @@ namespace QueryConverter.Shared.Cqrs.Dispatchers
         public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
              => _queryDispatcher.QueryAsync(query, cancellationToken);
 
-        public Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : class, ICommand
-             => _commandDispatcher.SendAsync(command, cancellationToken);
+        public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
+            =>  _commandDispatcher.SendAsync(command, cancellationToken);
     }
 }

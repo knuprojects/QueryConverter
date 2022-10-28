@@ -10,16 +10,22 @@ namespace QueryConverter.Shared.Cqrs.Dispatchers
         public CommandDispatcher(IServiceProvider serviceProvider)
             => _serviceProvider = serviceProvider;
 
-        public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
         {
-            if (command is null)
+            using var scope = _serviceProvider.CreateScope();
+
+            var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResult));
+
+            var handler = scope.ServiceProvider.GetRequiredService(handlerType);
+
+            var method = handlerType.GetMethod(nameof(ICommandHandler<ICommand<TResult>, TResult>.HandleAsync));
+
+            if (method is null)
             {
-                return;
+                throw new InvalidOperationException($"Query handler for '{typeof(TResult).Name}' is invalid.");
             }
 
-            using var scope = _serviceProvider.CreateScope();
-            var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand>>();
-            await handler.HandleAsync(command, cancellationToken);
+            return await (Task<TResult>)method.Invoke(handler, new object[] { command, cancellationToken });
         }
     }
 }

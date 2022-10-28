@@ -1,9 +1,9 @@
 using QueryConverter.Core.Handlers;
 using QueryConverter.Core.Handlers.Commands;
-using QueryConverter.Core.Utils;
 using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Cqrs.Dispatchers;
 using QueryConverter.Shared.Cqrs.Queries;
+using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Presentation.Infrastructure
 {
@@ -11,17 +11,18 @@ namespace QueryConverter.Presentation.Infrastructure
     {
         public static IServiceCollection AddCqrs(this IServiceCollection services)
             => services
-                     .AddDispatchers()
                      .AddCommands()
-                     .AddQueries();
+                     .AddQueries()
+                     .AddDispatchers();
 
         public static IServiceCollection AddDispatchers(this IServiceCollection services)
             => services
-                     .AddSingleton<IDispatcher, Dispatcher>();
+                     .AddSingleton<IDispatcher, Dispatcher>()
+                     .AddSingleton<ICommandDispatcher, CommandDispatcher>()
+                     .AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
         public static IServiceCollection AddQueries(this IServiceCollection services)
         {
-            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
             services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                     .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
                     .AsImplementedInterfaces()
@@ -32,15 +33,10 @@ namespace QueryConverter.Presentation.Infrastructure
 
         public static IServiceCollection AddCommands(this IServiceCollection services)
         {
-            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
-
-            services.AddScoped<ICommand, SelectCommand>();
-            services.AddScoped<ICommandHandler<SelectCommand>, SelectCommandHandler>();
-
-            //services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-            //        .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
-            //        .AsImplementedInterfaces()
-            //        .WithScopedLifetime());
+            services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+                    .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime());
 
             return services;
         }

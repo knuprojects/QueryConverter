@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QueryConverter.Core.Handlers;
 using QueryConverter.Shared.Cqrs.Dispatchers;
-using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Presentation.Controllers
 {
@@ -17,11 +16,10 @@ namespace QueryConverter.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResultModel>> ConvertSelectQuery([FromBody] SelectCommand command)
+        public async Task<IActionResult> ConvertSelectQuery([FromBody] SelectCommand command)
         {
-            await _dispatcher.SendAsync(command);
-
-            return Ok();
+            var result = await _dispatcher.SendAsync(command);
+            return Ok(result);
         }
     }
 }

@@ -5,7 +5,6 @@ using TSQL.Tokens;
 
 namespace QueryConverter.Shared.Utils.Extensions.Conditions
 {
-
     public static class ConditionGenerator
     {
         public static List<GenericCondition> Condition(this TSQLClause clause)
