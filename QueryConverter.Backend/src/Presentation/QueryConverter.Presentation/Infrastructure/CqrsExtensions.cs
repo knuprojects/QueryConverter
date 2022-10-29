@@ -1,18 +1,16 @@
-using QueryConverter.Core.Handlers;
-using QueryConverter.Core.Handlers.Commands;
 using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Cqrs.Dispatchers;
 using QueryConverter.Shared.Cqrs.Queries;
-using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Presentation.Infrastructure
 {
     public static class CqrsExtensions
     {
+        public static string projectName = "QueryConverter";
+
         public static IServiceCollection AddCqrs(this IServiceCollection services)
             => services
-                     .AddCommands()
-                     .AddQueries()
+                     .AddHandlers()
                      .AddDispatchers();
 
         public static IServiceCollection AddDispatchers(this IServiceCollection services)
@@ -21,19 +19,18 @@ namespace QueryConverter.Presentation.Infrastructure
                      .AddSingleton<ICommandDispatcher, CommandDispatcher>()
                      .AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
-        public static IServiceCollection AddQueries(this IServiceCollection services)
+        public static IServiceCollection AddHandlers(this IServiceCollection services)
         {
-            services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                                      .Where(x => x.FullName is not null && x.FullName.Contains(projectName))
+                                      .ToArray();
+
+            services.Scan(s => s.FromAssemblies(assemblies)
                     .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());
 
-            return services;
-        }
-
-        public static IServiceCollection AddCommands(this IServiceCollection services)
-        {
-            services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+            services.Scan(s => s.FromAssemblies(assemblies)
                     .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());

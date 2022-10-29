@@ -2,6 +2,6 @@
 {
     public interface ICommandDispatcher
     {
-        Task<TResult> SendAsync<TResult>(ICommand<TResult> query, CancellationToken cancellationToken = default);
+        Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
     }
 }
