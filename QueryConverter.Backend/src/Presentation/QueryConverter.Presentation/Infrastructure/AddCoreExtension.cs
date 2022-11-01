@@ -9,7 +9,7 @@ namespace QueryConverter.Presentation.Infrastructure
         public static IServiceCollection AddCore(this IServiceCollection services)
             => services
                     .AddSingleton<ExceptionMiddleware>()
-                    .AddScoped<ICondition, Condition>()
+                    .AddSingleton<ICondition, Condition>()
                     .AddScoped<IStatementGeneratorFactory, SelectStatementGenerator>()
                     .AddScoped<IStatementGeneratorFactory, OperationByStatementGenerator>()
                     .AddScoped<StatementFactory>();

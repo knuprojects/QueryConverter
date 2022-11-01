@@ -16,7 +16,7 @@ namespace QueryConverter.Core.Utils
         {
             string jsonPortion;
 
-            if (sizeStatement is not null)
+            if (sizeStatement is null)
             {
                 jsonPortion = $@"{{
                        {conditionsStatement}

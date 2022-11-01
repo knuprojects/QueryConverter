@@ -15,7 +15,7 @@ namespace QueryConverter.Core.Handlers.Commands
     {
         private readonly ICondition _condition;
 
-        public SelectCommandHandler(Condition condition)
+        public SelectCommandHandler(ICondition condition)
         {
             _condition = condition;
         }
