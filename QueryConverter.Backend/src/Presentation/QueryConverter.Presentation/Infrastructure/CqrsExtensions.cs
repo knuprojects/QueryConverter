@@ -27,6 +27,10 @@ namespace QueryConverter.Presentation.Infrastructure
         {
             services.AddScoped<ICommand<ResultModel>, SelectCommand>();
             services.AddScoped<ICommandHandler<SelectCommand, ResultModel>, SelectCommandHandler>();
+            services.AddScoped<ICommand<ResultModel>, OrderByCommand>();
+            services.AddScoped<ICommandHandler<OrderByCommand, ResultModel>, OrderByCommandHandler>();
+            services.AddScoped<ICommand<ResultModel>, GroupByCommand>();
+            services.AddScoped<ICommandHandler<GroupByCommand, ResultModel>, GroupByCommandHandler>();
 
             //var assemblies = AppDomain.CurrentDomain.GetAssemblies()
             //                          .Where(x => x.FullName is not null && x.FullName.Contains(projectName))
