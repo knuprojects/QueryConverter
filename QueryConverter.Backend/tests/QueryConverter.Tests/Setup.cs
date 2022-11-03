@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using QueryConverter.Core.Handlers;
+using QueryConverter.Core.Utils;
+using QueryConverter.Core.Utils.Factories;
 using System;
 
 namespace QueryConverter.Tests
 {
-    public class Setup 
+    public class Setup
     {
         private readonly IHostBuilder _defaultBuilder;
         private IServiceProvider _services;
@@ -25,11 +26,13 @@ namespace QueryConverter.Tests
 
             _built = true;
 
-            //_defaultBuilder.ConfigureServices((context, services) =>
-            //{
-            //    services.AddScoped<IQueryHandler, QueryHandler>();
-            //    services.AddScoped<IQueryProcessor, QueryProcessor>();
-            //});
+            _defaultBuilder.ConfigureServices((context, services) =>
+            {
+                services.AddSingleton<ICondition, Condition>()
+                        .AddScoped<IStatementGeneratorFactory, SelectStatementGenerator>()
+                        .AddScoped<IStatementGeneratorFactory, OperationByStatementGenerator>()
+                        .AddScoped<StatementFactory>();
+            });
 
             _services = _defaultBuilder.Build().Services;
 
