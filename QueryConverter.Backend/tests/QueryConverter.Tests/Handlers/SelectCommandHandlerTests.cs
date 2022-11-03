@@ -43,34 +43,6 @@ namespace QueryConverter.Tests.Handlers
             var result = await _selectCommandHandler.HandleAsync(command);
 
             result.Should().NotBeNull();
-        }
-
-        [Fact]
-        public async Task HandleSelectStatementWithFilter_Should_Be_Exception()
-        {
-            var command = new SelectCommand()
-            {
-                SQLQuery = QueryTemplate.InvalidSelectWithFilter
-            };
-
-            var result = _selectCommandHandler.HandleAsync(command);
-
-            result.Exception.Should().NotBeNull();
-            //Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
-        }
-
-        [Fact]
-        public async Task HandleSelectStatementWithFilters_Should_Be_Exception()
-        {
-            var command = new SelectCommand()
-            {
-                SQLQuery = QueryTemplate.InvalidSelectWithFilters
-            };
-
-            var result = _selectCommandHandler.HandleAsync(command);
-
-            result.Exception.Should().NotBeNull();
-            Assert.ThrowsAnyAsync<QueryConverterException>(() => result);
-        }
+        }        
     }
 }
