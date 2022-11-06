@@ -15,7 +15,7 @@ namespace QueryConverter.Core.Handlers.Commands
     {
         private readonly ICondition _condition;
 
-        public GroupByCommandHandler(Condition condition)
+        public GroupByCommandHandler(ICondition condition)
         {
             _condition = condition;
         }
