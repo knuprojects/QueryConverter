@@ -10,7 +10,7 @@ namespace QueryConverter.Presentation.Infrastructure
 
         public static IServiceCollection AddCqrs(this IServiceCollection services)
             => services
-                     .AddHandlers()
+                     //.AddHandlers()
                      .AddDispatchers();
 
         public static IServiceCollection AddDispatchers(this IServiceCollection services)
@@ -19,23 +19,23 @@ namespace QueryConverter.Presentation.Infrastructure
                      .AddSingleton<ICommandDispatcher, CommandDispatcher>()
                      .AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
-        public static IServiceCollection AddHandlers(this IServiceCollection services)
-        {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                                      .Where(x => x.FullName is not null && x.FullName.Contains(projectName))
-                                      .ToArray();
+        //public static IServiceCollection AddHandlers(this IServiceCollection services)
+        //{
+        //    var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+        //                              .Where(x => x.FullName is not null && x.FullName.Contains(projectName))
+        //                              .ToArray();
 
-            services.Scan(s => s.FromAssemblies(assemblies)
-                    .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
-                    .AsImplementedInterfaces()
-                    .WithScopedLifetime());
+        //    services.Scan(s => s.FromAssemblies(assemblies)
+        //            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
+        //            .AsImplementedInterfaces()
+        //            .WithScopedLifetime());
 
-            services.Scan(s => s.FromAssemblies(assemblies)
-                    .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
-                    .AsImplementedInterfaces()
-                    .WithScopedLifetime());
+        //    services.Scan(s => s.FromAssemblies(assemblies)
+        //            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
+        //            .AsImplementedInterfaces()
+        //            .WithScopedLifetime());
 
-            return services;
-        }
+        //    return services;
+        //}
     }
 }
