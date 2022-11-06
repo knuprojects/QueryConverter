@@ -1,0 +1,16 @@
+<h3 class="title">Choose command</h3>
+<div class="commands">
+  <form class="commands-form" [formGroup]="commandsForm">
+    <mat-form-field class="command-form-select">
+      <mat-select formControlName="command">
+        <mat-option *ngFor="let command of commands" [value]="command.name"> {{command.name}} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="command-form-input">
+      <input matInput placeholder="Command" formControlName="SQLQuery">
+    </mat-form-field>
+    <div class="button-wrapper" (click)="sendCommand();">
+      <button class="add-button" mat-button>Send</button>
+    </div>
+  </form>
+</div>
