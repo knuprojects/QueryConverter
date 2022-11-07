@@ -15,21 +15,21 @@ namespace QueryConverter.Presentation.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpPut]
+        [HttpPut("/select")]
         public async Task<IActionResult> ConvertSelectQuery([FromBody] SelectCommand command)
         {
             var result = await _dispatcher.SendAsync(command);
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPut("/orderBy")]
         public async Task<IActionResult> ConvertOrderByQuery([FromBody] OrderByCommand command)
         {
             var result = await _dispatcher.SendAsync(command);
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPut("/groupBy")]
         public async Task<IActionResult> ConvertGroupByQuery([FromBody] GroupByCommand command)
         {
             var result = await _dispatcher.SendAsync(command);

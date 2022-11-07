@@ -46,7 +46,8 @@ namespace QueryConverter.Presentation.Infrastructure
             //           .AsImplementedInterfaces()
             //           .WithScopedLifetime());
 
-        //    return services;
-        //}
+                return services;
+            //}
+        }
     }
 }
