@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryConverter.Shared", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{62A4C654-5E0F-4473-9B85-00A94C970AEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryConverter.Tests", "tests\QueryConverter.Tests\QueryConverter.Tests.csproj", "{6BD41A16-B3E1-444D-A140-C573A7BE5007}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryConverter.Tests", "tests\QueryConverter.Tests\QueryConverter.Tests.csproj", "{6BD41A16-B3E1-444D-A140-C573A7BE5007}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryConverter.Benchmarks", "tests\QueryConverter.Benchmarks\QueryConverter.Benchmarks.csproj", "{31B4D538-EE08-4A61-BF06-E771ADDEED9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{6BD41A16-B3E1-444D-A140-C573A7BE5007}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD41A16-B3E1-444D-A140-C573A7BE5007}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD41A16-B3E1-444D-A140-C573A7BE5007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B4D538-EE08-4A61-BF06-E771ADDEED9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B4D538-EE08-4A61-BF06-E771ADDEED9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B4D538-EE08-4A61-BF06-E771ADDEED9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B4D538-EE08-4A61-BF06-E771ADDEED9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{D62761A3-DEB9-45D9-955B-3C5064478958} = {BE3D2A65-C647-41A8-B0FE-781C4B98949F}
 		{296B0A7A-5CEB-4D86-8674-A36834BBAED2} = {D62761A3-DEB9-45D9-955B-3C5064478958}
 		{6BD41A16-B3E1-444D-A140-C573A7BE5007} = {62A4C654-5E0F-4473-9B85-00A94C970AEC}
+		{31B4D538-EE08-4A61-BF06-E771ADDEED9E} = {62A4C654-5E0F-4473-9B85-00A94C970AEC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFC9E2B4-00C5-43D3-B404-F6920EFCE995}
