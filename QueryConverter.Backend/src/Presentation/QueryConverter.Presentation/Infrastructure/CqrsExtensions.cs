@@ -9,11 +9,11 @@ namespace QueryConverter.Presentation.Infrastructure
 {
     public static class CqrsExtensions
     {
-        public static string projectName = "QueryConverter";
+        //public static string projectName = "QueryConverter";
 
         public static IServiceCollection AddCqrs(this IServiceCollection services)
             => services
-                     //.AddHandlers()
+                     .AddHandlers()
                      .AddDispatchers();
 
         public static IServiceCollection AddDispatchers(this IServiceCollection services)

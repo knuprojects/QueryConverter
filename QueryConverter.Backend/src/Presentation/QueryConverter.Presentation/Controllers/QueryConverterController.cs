@@ -15,6 +15,11 @@ namespace QueryConverter.Presentation.Controllers
             _dispatcher = dispatcher;
         }
 
+        /// <summary>
+        /// Convert Sql Select Command to ELK
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPut("/select")]
         public async Task<IActionResult> ConvertSelectQuery([FromBody] SelectCommand command)
         {
@@ -22,6 +27,11 @@ namespace QueryConverter.Presentation.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Convert Sql OrderBy Command to ELK
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPut("/orderBy")]
         public async Task<IActionResult> ConvertOrderByQuery([FromBody] OrderByCommand command)
         {
@@ -29,6 +39,11 @@ namespace QueryConverter.Presentation.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Convert Sql GroupBy Command to ELK
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPut("/groupBy")]
         public async Task<IActionResult> ConvertGroupByQuery([FromBody] GroupByCommand command)
         {
