@@ -1,12 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
-using QueryConverter.Core.Handlers.Commands;
 using QueryConverter.Core.Handlers;
+using QueryConverter.Core.Handlers.Commands;
 using QueryConverter.Core.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QueryConverter.Benchmarks.Handlers.Commands
 {

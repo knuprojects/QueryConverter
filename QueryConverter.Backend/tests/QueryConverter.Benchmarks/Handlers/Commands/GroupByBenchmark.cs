@@ -5,18 +5,18 @@ using QueryConverter.Core.Utils;
 
 namespace QueryConverter.Benchmarks.Handlers.Commands
 {
-    public class OrderByBenchmark
+    public class GroupByBenchmark
     {
-        public const string SelectWithOrderBy = "SELECT Name, Pin FROM Citites ORDER BY Name asc";
+        public const string SelectWithFilterAndGroupBy = "SELECT SolarSystem, Galaxy FROM Planets WHERE SpacecraftWithinKilometers< 10000 GROUP BY SolarSystem, Galaxy";
 
         private readonly static ICondition condition = new Condition();
 
-        private readonly static OrderByCommandHandler _handler = new OrderByCommandHandler(condition);
+        private readonly static GroupByCommandHandler _handler = new GroupByCommandHandler(condition);
 
         [Benchmark]
         public void handler()
         {
-            var command = new OrderByCommand() { SQLQuery = SelectWithOrderBy };
+            var command = new GroupByCommand() { SQLQuery = SelectWithFilterAndGroupBy };
             _handler.HandleAsync(command);
         }
     }
