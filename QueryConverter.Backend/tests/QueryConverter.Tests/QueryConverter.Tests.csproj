@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core\QueryConverter.Core\QueryConverter.Core.csproj" />
+    <ProjectReference Include="..\..\src\Presentation\QueryConverter.Presentation\QueryConverter.Presentation.csproj" />
     <ProjectReference Include="..\..\src\Shared\QueryConverter.Shared\QueryConverter.Shared.csproj" />
   </ItemGroup>
 

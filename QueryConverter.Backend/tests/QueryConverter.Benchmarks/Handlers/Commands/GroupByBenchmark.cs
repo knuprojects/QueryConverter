@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using QueryConverter.Core.Handlers;
-using QueryConverter.Core.Handlers.Commands;
 using QueryConverter.Core.Utils;
+using QueryConverter.Presentation.Handlers;
 
 namespace QueryConverter.Benchmarks.Handlers.Commands
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QueryConverter.Core.Handlers;
+using QueryConverter.Presentation.Handlers;
 using QueryConverter.Shared.Cqrs.Dispatchers;
 
 namespace QueryConverter.Presentation.Controllers
