@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { QueryService } from "../services/query.service";
-import {Observable} from "rxjs";
-import {ResultModel} from "../models/resultModel";
+import {map, Observable} from "rxjs";
+import { ResultModel } from "../models/resultModel";
+import { CommandModel } from "../models/commandModel";
 
 @Component({
   selector: 'app-converter',
@@ -14,6 +15,7 @@ export class ConverterComponent implements OnInit {
   public select$!: Observable<ResultModel>;
   public orderBy$!: Observable<ResultModel>;
   public groupBy$!: Observable<ResultModel>;
+  public res: any;
   public commands: any[] = [
     { name: 'SELECT' },
     { name: 'ORDER BY' },
@@ -33,19 +35,23 @@ export class ConverterComponent implements OnInit {
   public sendCommand(): void {
     let command = this.commandsForm.controls['command'].value;
     let SQLQuery = this.commandsForm.controls['SQLQuery'].value;
+    let commandModel = new CommandModel(SQLQuery);
 
     if (command == "SELECT") {
-      console.log('select');
-      this.select$ = this.queryService.ConvertSelectQuery(SQLQuery);
-      let item;
-      this.select$.subscribe( data => item = data);
-      console.log(item);
+
+      this.select$ = this.queryService.ConvertSelectQuery(commandModel);
+      this.select$.subscribe(x => {console.log(x),
+        this.res = x})
     } else if (command == "ORDER BY") {
-      console.log('order by');
-      this.orderBy$ = this.queryService.ConvertOrderByQuery(SQLQuery);
+
+      this.orderBy$ = this.queryService.ConvertOrderByQuery(commandModel);
+      this.orderBy$.subscribe(x => {console.log(x),
+        this.res = x})
     } else if (command == "GROUP BY") {
-      console.log('group by');
-      this.groupBy$ = this.queryService.ConvertGroupByQuery(SQLQuery);
+
+      this.groupBy$ = this.queryService.ConvertGroupByQuery(commandModel);
+      this.groupBy$.subscribe(x => {console.log(x),
+        this.res = x})
     }
   }
 }

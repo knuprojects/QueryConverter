@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: "http://localhost:5170/api/queryconverter"
+  baseUrl: "http://localhost:5170"
 };
 
 /*
