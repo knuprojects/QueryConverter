@@ -9,7 +9,7 @@ using QueryConverter.Types.Shared.Dto;
 using TSQL;
 using TSQL.Statements;
 
-namespace QueryConverter.Core.Handlers.Commands
+namespace QueryConverter.Presentation.Handlers
 {
     public class OrderByCommandHandler : ICommandHandler<OrderByCommand, ResultModel>
     {

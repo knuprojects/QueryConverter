@@ -9,18 +9,18 @@ using QueryConverter.Types.Shared.Dto;
 using TSQL;
 using TSQL.Statements;
 
-namespace QueryConverter.Core.Handlers.Commands
+namespace QueryConverter.Presentation.Handlers
 {
-    public class GroupByCommandHandler : ICommandHandler<GroupByCommand, ResultModel>
+    public class SelectCommandHandler : ICommandHandler<SelectCommand, ResultModel>
     {
         private readonly ICondition _condition;
 
-        public GroupByCommandHandler(ICondition condition)
+        public SelectCommandHandler(ICondition condition)
         {
             _condition = condition;
         }
 
-        public Task<ResultModel> HandleAsync(GroupByCommand command, CancellationToken cancellationToken = default)
+        public Task<ResultModel> HandleAsync(SelectCommand command, CancellationToken cancellationToken = default)
         {
             TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(command.SQLQuery)[0] as TSQLSelectStatement;
 
@@ -30,15 +30,13 @@ namespace QueryConverter.Core.Handlers.Commands
             {
                 var conditions = statement.Where.Condition();
 
-                var statementGenerator = factory.StatementGenerator(new OperationByStatementGenerator(), statement);
+                var statementGenerator = factory.StatementGenerator(new SelectStatementGenerator(), statement);
 
                 List<string> conditionsList = ConditionStatement.GetConditionStatement(conditions);
 
                 string conditionsStatement = Templates.Conditions.Replace("(conditions)", string.Join(",", conditionsList));
 
-                string sizeStatement = Templates.SizeZero;
-
-                var result = _condition.QueryPortion(statementGenerator.Item1, sizeStatement, statementGenerator.Item2, conditionsStatement);
+                var result = _condition.QueryPortion(statementGenerator.Item1, null, statementGenerator.Item2, conditionsStatement);
 
                 return Task.FromResult(result);
             }

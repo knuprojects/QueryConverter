@@ -1,8 +1,6 @@
-﻿using QueryConverter.Core.Handlers;
-using QueryConverter.Core.Handlers.Commands;
-using QueryConverter.Core.Utils;
+﻿using QueryConverter.Core.Utils;
+using QueryConverter.Presentation.Handlers;
 using QueryConverter.Shared.Cqrs.Commands;
-using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Tests.Templates;
 using QueryConverter.Types.Shared.Dto;
 
@@ -43,6 +41,6 @@ namespace QueryConverter.Tests.Handlers
             var result = await _selectCommandHandler.HandleAsync(command);
 
             result.Should().NotBeNull();
-        }        
+        }
     }
 }

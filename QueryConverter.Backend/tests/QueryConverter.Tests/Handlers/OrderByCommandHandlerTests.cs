@@ -1,14 +1,8 @@
-﻿using QueryConverter.Core.Handlers.Commands;
-using QueryConverter.Core.Handlers;
+﻿using QueryConverter.Core.Utils;
+using QueryConverter.Presentation.Handlers;
 using QueryConverter.Shared.Cqrs.Commands;
-using QueryConverter.Types.Shared.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using QueryConverter.Core.Utils;
 using QueryConverter.Tests.Templates;
+using QueryConverter.Types.Shared.Dto;
 
 namespace QueryConverter.Tests.Handlers
 {
@@ -34,6 +28,6 @@ namespace QueryConverter.Tests.Handlers
             var result = await _orderByCommandHandler.HandleAsync(command);
 
             result.Should().NotBeNull();
-        }       
+        }
     }
 }
