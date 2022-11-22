@@ -9,11 +9,14 @@ import { MatSelectModule } from "@angular/material/select";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { HttpClientModule } from "@angular/common/http";
+import {MatButtonModule} from "@angular/material/button";
+import { JsonPipePipe } from './json-pipe.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConverterComponent
+    ConverterComponent,
+    JsonPipePipe,
   ],
   imports: [
     BrowserModule,
@@ -23,7 +26,8 @@ import { HttpClientModule } from "@angular/common/http";
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    HttpClientModule
+    HttpClientModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

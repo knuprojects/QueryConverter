@@ -16,3 +16,32 @@
   display: flex;
   flex-direction: column;
 }
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.add-button {
+  background-color: coral;
+}
+
+.area-wrapper {
+
+}
+
+.query-area {
+  width: 400px;
+  height: 400px;
+}
+
+.json-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-right: 100px;
+  margin-left: 100px;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}

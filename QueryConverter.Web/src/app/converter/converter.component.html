@@ -10,10 +10,11 @@
       <input matInput placeholder="Command" formControlName="SQLQuery">
     </mat-form-field>
     <div class="button-wrapper" (click)="sendCommand();">
-      <button class="add-button" mat-button>Send</button>
+      <button class="add-button" mat-raised-button>Send</button>
     </div>
   </form>
-  <div>
-    {{res | json}}
-  </div>
 </div>
+<div *ngIf="isJsonResult" class="json-wrapper">
+  <pre [innerHTML]="jsonResult"></pre>
+</div>
+

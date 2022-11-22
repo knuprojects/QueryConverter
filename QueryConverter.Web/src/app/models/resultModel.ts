@@ -1,4 +1,4 @@
 export interface ResultModel {
-  ElasticQuery: string,
+  elasticQuery: string,
   rows: number
 }
