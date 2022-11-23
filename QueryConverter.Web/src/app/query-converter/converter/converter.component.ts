@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { QueryService } from "../services/query.service";
-import {map, Observable} from "rxjs";
-import { ResultModel } from "../models/resultModel";
-import { CommandModel } from "../models/commandModel";
+import {Observable, Subscription} from "rxjs";
+
+import { HttpService } from "../../core/services/http-service";
+import { ResultModel } from "../../core/models/result-model";
+import { CommandModel } from "../../core/models/command-model";
 
 @Component({
   selector: 'app-converter',
   templateUrl: './converter.component.html',
   styleUrls: ['./converter.component.scss']
 })
-export class ConverterComponent implements OnInit {
+export class ConverterComponent implements OnInit, OnDestroy {
+  private subscriptions: Array<Subscription> = [];
   public commandsForm!: FormGroup;
   public select$!: Observable<ResultModel>;
   public orderBy$!: Observable<ResultModel>;
@@ -24,7 +26,7 @@ export class ConverterComponent implements OnInit {
   ];
 
   constructor(private formBuilder: FormBuilder,
-              private queryService: QueryService) { }
+              private httpService: HttpService) { }
 
   ngOnInit(): void {
     this.commandsForm = this.formBuilder.group({
@@ -40,26 +42,29 @@ export class ConverterComponent implements OnInit {
     let commandModel = new CommandModel(SQLQuery);
 
     if (command == "SELECT") {
-
-      this.select$ = this.queryService.ConvertSelectQuery(commandModel);
+      this.select$ = this.httpService.ConvertQuery(commandModel, 'select');
       this.select$.subscribe(x => {
-        const str = x.elasticQuery.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        this.jsonResult = str;
+        this.jsonResult = x.elasticQuery.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        this.subscriptions.push(this.jsonResult);
       });
     } else if (command == "ORDER BY") {
-
-      this.orderBy$ = this.queryService.ConvertOrderByQuery(commandModel);
+      this.orderBy$ = this.httpService.ConvertQuery(commandModel, 'orderBy');
       this.orderBy$.subscribe(x => {
-        const str = x.elasticQuery.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        this.jsonResult = str;
+        this.jsonResult = x.elasticQuery.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        this.subscriptions.push(this.jsonResult);
       });
     } else if (command == "GROUP BY") {
-
-      this.groupBy$ = this.queryService.ConvertGroupByQuery(commandModel);
+      this.groupBy$ = this.httpService.ConvertQuery(commandModel, 'groupBy');
       this.groupBy$.subscribe(x => {
-        const str = x.elasticQuery.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        this.jsonResult = str;
+        this.jsonResult = x.elasticQuery.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        this.subscriptions.push(this.jsonResult);
       });
+    }
+  }
+
+  ngOnDestroy() {
+    for (const subs of this.subscriptions) {
+      subs.unsubscribe();
     }
   }
 }

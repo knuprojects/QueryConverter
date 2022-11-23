@@ -14,8 +14,7 @@ namespace QueryConverter.Presentation.Middlewares.Infrastructure
             }
             catch (Exception exception)
             {
-                if ((exception is QueryConverterException))
-                    await HandleExceptionAsync(context, exception);
+                await HandleExceptionAsync(context, exception);
             }
         }
 
