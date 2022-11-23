@@ -1,10 +1,10 @@
 ﻿using TSQL.Statements;
 
-namespace QueryConverter.Core.Utils.Factories
+namespace QueryConverter.Core.Utils.Strategies
 {
-    public class StatementFactory
+    public class StatementStrategy
     {
-        public (string, string) StatementGenerator(IStatementGeneratorFactory factory, TSQLSelectStatement statement)
+        public (string, string) StatementGenerator(IStatementGeneratorStrategy factory, TSQLSelectStatement statement)
         {
             factory = factory ?? throw new ArgumentNullException(nameof(factory));
 

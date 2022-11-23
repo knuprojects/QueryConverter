@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QueryConverter.Core.Utils;
-using QueryConverter.Core.Utils.Factories;
+using QueryConverter.Core.Utils.Strategies;
 using System;
 
 namespace QueryConverter.Tests
@@ -29,9 +29,9 @@ namespace QueryConverter.Tests
             _defaultBuilder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton<ICondition, Condition>()
-                        .AddScoped<IStatementGeneratorFactory, SelectStatementGenerator>()
-                        .AddScoped<IStatementGeneratorFactory, OperationByStatementGenerator>()
-                        .AddScoped<StatementFactory>();
+                        .AddScoped<IStatementGeneratorStrategy, SelectStatementGenerator>()
+                        .AddScoped<IStatementGeneratorStrategy, OperationByStatementGenerator>()
+                        .AddScoped<StatementStrategy>();
             });
 
             _services = _defaultBuilder.Build().Services;

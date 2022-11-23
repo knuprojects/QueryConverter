@@ -2,14 +2,14 @@
 using QueryConverter.Types.Shared.Consts;
 using TSQL.Statements;
 
-namespace QueryConverter.Core.Utils.Factories
+namespace QueryConverter.Core.Utils.Strategies
 {
-    public interface IStatementGeneratorFactory
+    public interface IStatementGeneratorStrategy
     {
         (string, string) GenerateStatement(TSQLSelectStatement statement);
     }
 
-    public class SelectStatementGenerator : IStatementGeneratorFactory
+    public class SelectStatementGenerator : IStatementGeneratorStrategy
     {
         public (string, string) GenerateStatement(TSQLSelectStatement statement)
         {
@@ -30,7 +30,7 @@ namespace QueryConverter.Core.Utils.Factories
         }
     }
 
-    public class OperationByStatementGenerator : IStatementGeneratorFactory
+    public class OperationByStatementGenerator : IStatementGeneratorStrategy
     {
         public (string, string) GenerateStatement(TSQLSelectStatement statement)
         {

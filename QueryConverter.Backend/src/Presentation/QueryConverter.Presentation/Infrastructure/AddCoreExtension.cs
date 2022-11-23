@@ -1,5 +1,5 @@
 ﻿using QueryConverter.Core.Utils;
-using QueryConverter.Core.Utils.Factories;
+using QueryConverter.Core.Utils.Strategies;
 using QueryConverter.Presentation.Middlewares.Infrastructure;
 
 namespace QueryConverter.Presentation.Infrastructure
@@ -10,9 +10,9 @@ namespace QueryConverter.Presentation.Infrastructure
             => services
                     .AddSingleton<ExceptionMiddleware>()
                     .AddSingleton<ICondition, Condition>()
-                    .AddScoped<IStatementGeneratorFactory, SelectStatementGenerator>()
-                    .AddScoped<IStatementGeneratorFactory, OperationByStatementGenerator>()
-                    .AddScoped<StatementFactory>();
+                    .AddScoped<IStatementGeneratorStrategy, SelectStatementGenerator>()
+                    .AddScoped<IStatementGeneratorStrategy, OperationByStatementGenerator>()
+                    .AddScoped<StatementStrategy>();
 
         public static IApplicationBuilder UseCore(this IApplicationBuilder builder)
             => builder.UseMiddleware<ExceptionMiddleware>();

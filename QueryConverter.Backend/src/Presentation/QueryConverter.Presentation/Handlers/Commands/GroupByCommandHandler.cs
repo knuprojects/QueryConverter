@@ -1,6 +1,6 @@
 ﻿using QueryConverter.Core.ExceptionCodes;
 using QueryConverter.Core.Utils;
-using QueryConverter.Core.Utils.Factories;
+using QueryConverter.Core.Utils.Strategies;
 using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Types.Exceptions;
 using QueryConverter.Shared.Utils.Extensions.Conditions;
@@ -24,13 +24,13 @@ namespace QueryConverter.Presentation.Handlers
         {
             TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(command.SQLQuery)[0] as TSQLSelectStatement;
 
-            var factory = new StatementFactory();
+            var strategy = new StatementStrategy();
 
             try
             {
                 var conditions = statement.Where.Condition();
 
-                var statementGenerator = factory.StatementGenerator(new OperationByStatementGenerator(), statement);
+                var statementGenerator = strategy.StatementGenerator(new OperationByStatementGenerator(), statement);
 
                 List<string> conditionsList = ConditionStatement.GetConditionStatement(conditions);
 
