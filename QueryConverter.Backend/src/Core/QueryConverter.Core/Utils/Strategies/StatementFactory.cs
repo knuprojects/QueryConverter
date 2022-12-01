@@ -2,13 +2,13 @@
 
 namespace QueryConverter.Core.Utils.Strategies
 {
-    public class StatementStrategy
+    public class StatementFactory
     {
-        public (string, string) StatementGenerator(IStatementGeneratorStrategy factory, TSQLSelectStatement statement)
+        public (string, string) StatementGenerator(IStatementGeneratorStrategy strategy, TSQLSelectStatement statement)
         {
-            factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
 
-            return factory.GenerateStatement(statement);
+            return strategy.GenerateStatement(statement);
         }
     }
 }

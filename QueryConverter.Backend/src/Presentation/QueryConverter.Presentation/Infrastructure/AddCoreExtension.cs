@@ -12,7 +12,7 @@ namespace QueryConverter.Presentation.Infrastructure
                     .AddSingleton<ICondition, Condition>()
                     .AddScoped<IStatementGeneratorStrategy, SelectStatementGenerator>()
                     .AddScoped<IStatementGeneratorStrategy, OperationByStatementGenerator>()
-                    .AddScoped<StatementStrategy>();
+                    .AddScoped<StatementFactory>();
 
         public static IApplicationBuilder UseCore(this IApplicationBuilder builder)
             => builder.UseMiddleware<ExceptionMiddleware>();

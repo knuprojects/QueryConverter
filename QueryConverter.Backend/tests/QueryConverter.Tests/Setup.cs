@@ -31,7 +31,7 @@ namespace QueryConverter.Tests
                 services.AddSingleton<ICondition, Condition>()
                         .AddScoped<IStatementGeneratorStrategy, SelectStatementGenerator>()
                         .AddScoped<IStatementGeneratorStrategy, OperationByStatementGenerator>()
-                        .AddScoped<StatementStrategy>();
+                        .AddScoped<StatementFactory>();
             });
 
             _services = _defaultBuilder.Build().Services;

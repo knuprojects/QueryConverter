@@ -24,7 +24,7 @@ namespace QueryConverter.Presentation.Handlers
         {
             TSQLSelectStatement statement = TSQLStatementReader.ParseStatements(command.SQLQuery)[0] as TSQLSelectStatement;
 
-            var stategy = new StatementStrategy();
+            var stategy = new StatementFactory();
 
             try
             {
