@@ -3,7 +3,7 @@ using QueryConverter.Types.Shared.Enums;
 using TSQL.Clauses;
 using TSQL.Tokens;
 
-namespace QueryConverter.Shared.Utils.Extensions.Conditions
+namespace QueryConverter.Core.Conditions
 {
     public static class ConditionGenerator
     {

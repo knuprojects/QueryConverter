@@ -3,6 +3,6 @@ using QueryConverter.Benchmarks.Handlers.Commands;
 
 
 
+BenchmarkRunner.Run<SelectBenchmark>();
 //BenchmarkRunner.Run<OrderByBenchmark>();
-//BenchmarkRunner.Run<SelectBenchmark>();
-BenchmarkRunner.Run<GroupByBenchmark>();
+//BenchmarkRunner.Run<GroupByBenchmark>();

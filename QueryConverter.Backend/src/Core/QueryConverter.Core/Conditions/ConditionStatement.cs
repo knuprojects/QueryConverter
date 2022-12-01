@@ -2,7 +2,7 @@
 using QueryConverter.Types.Shared.Consts;
 using QueryConverter.Types.Shared.Enums;
 
-namespace QueryConverter.Shared.Utils.Extensions.Conditions
+namespace QueryConverter.Core.Conditions
 {
     public static class ConditionStatement
     {

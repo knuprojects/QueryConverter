@@ -3,7 +3,7 @@ using QueryConverter.Core.Utils;
 using QueryConverter.Core.Utils.Strategies;
 using QueryConverter.Shared.Cqrs.Commands;
 using QueryConverter.Shared.Types.Exceptions;
-using QueryConverter.Shared.Utils.Extensions.Conditions;
+using QueryConverter.Core.Conditions;
 using QueryConverter.Types.Shared.Consts;
 using QueryConverter.Types.Shared.Dto;
 using TSQL;
